@@ -2,8 +2,9 @@ const express = require('express');
 
 const routes = express.Router();
 
-routes.get('/', (req, res) => {
-  res.send('test');
-});
+const index = require('../controller/index');
+
+routes.get('/', index.store);
+routes.post('/', index.show);
 
 module.exports = routes;
