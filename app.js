@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-const dotenv = require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 
@@ -15,3 +14,7 @@ app.use(routes);
 app.listen(PORT, () => {
   console.log(`Listening PORT ${PORT}`);
 });
+
+module.exports = {
+  app,
+};
