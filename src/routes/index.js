@@ -3,8 +3,7 @@ const express = require('express');
 const routes = express.Router();
 
 const index = require('../controller/index');
-const { auth } = require('../middleware/auth');
 
-routes.get('/', index.show);
-routes.post('/', auth, index.store);
+routes.get('/login', index.store);
+routes.get('/callback?', index.storeKey);
 module.exports = routes;

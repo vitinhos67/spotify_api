@@ -9,6 +9,7 @@ const spotifyKeys = {
 };
 const spotifyURL = {
   endpoint: 'https://api.spotify.com',
+  accountsEndpoint: 'https://accounts.spotify.com/api/token',
 };
 
 const configs = {
