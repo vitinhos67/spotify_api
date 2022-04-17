@@ -4,6 +4,8 @@ const routes = express.Router();
 
 const index = require('../controller/index');
 
-routes.get('/login', index.store);
-routes.get('/callback?', index.storeKey);
+routes.get('/', index.home);
+routes.get('/token', index.storeToken);
+routes.get('/callback?', index.tokenValidate);
+
 module.exports = routes;

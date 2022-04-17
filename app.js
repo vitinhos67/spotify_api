@@ -13,7 +13,6 @@ const routes = require('./src/routes');
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
-
 app.use(session({
   secret: configs.sess,
   saveUninitialized: true,

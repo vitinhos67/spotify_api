@@ -3,24 +3,57 @@ const dotenv = require('dotenv').config({
   path: '../../.env',
 });
 const request = require('request');
+const axios = require('axios');
+const credentials = require('../config/spotify/credentials');
 
-const express = require('express');
-
-const app = express();
-const cookieParser = require('cookie-parser');
+const { spotifyURL } = credentials;
+const { endpoint } = spotifyURL;
 const { generateRandomString } = require('../config/spotify/utils');
 
 const redirect_uri = 'http://localhost:3003/callback';
 
-app.use(cookieParser());
 const stateKey = 'spotify_auth_state';
 module.exports = {
-  async store(req, res) {
+
+  async home(req, res) {
     try {
-      // eslint-disable-next-line global-require
+      const token = req.cookies.token || null;
 
+      if (!token) {
+        return res.redirect('/token');
+      }
+
+      const idTrack = '11dFghVXANMlKmJXsNCbNl';
+
+      const response = await axios({
+        url: `${endpoint}/v1/tracks/${idTrack}`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const { data } = response;
+
+      if (data.status === '404') {
+        return res.json({
+          message: 'Result not found.',
+        });
+      }
+
+      return res.json({
+        data,
+      });
+    } catch (e) {
+      return res.status(401).json({
+        error: e,
+      });
+    }
+  },
+  /// ////////////////
+  async storeToken(req, res) {
+    try {
       const state = generateRandomString(16);
-
       const scope = 'user-read-private user-read-email';
 
       const query = new URLSearchParams({
@@ -31,7 +64,7 @@ module.exports = {
         state,
       });
 
-      res.cookie(stateKey, stateKey);
+      res.cookie(stateKey, state);
 
       const url = `https://accounts.spotify.com/authorize?${query}`;
 
@@ -41,40 +74,46 @@ module.exports = {
     }
   },
 
-  async storeKey(req, res) {
-    const code = req.query.code || null;
-    const state = req.query.state || null;
-    const storedState = req.cookies ? req.cookies[stateKey] : null;
+  /// ///////////////////
+  async tokenValidate(req, res) {
+    try {
+      const code = req.query.code || null;
+      const state = req.query.state || null;
+      const storedState = req.cookies ? req.cookies[stateKey] : null;
 
-    const queryErrorParam = new URLSearchParams({
-      error: 'statemismatch',
-    });
-    if (state === null && state !== storedState) {
-      return res.redirect(`#${queryErrorParam}`);
-    }
-    res.clearCookie(stateKey);
-
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        code,
-        redirect_uri,
-        grant_type: 'client_credentials',
-      },
-      headers: {
-        Authorization: `Basic ${(Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64'))}`,
-      },
-      json: true,
-    };
-
-    request.post(authOptions, (err, response, body) => {
-      if (!err && response.statusCode === 200) {
-        const { access_token } = body;
-        const { refresh_token } = body;
-        console.log(body);
-        return `${access_token}${refresh_token}`;
+      if (state === null && state !== storedState) {
+        return res.status(401).json({
+          error: 'state',
+        });
       }
-    });
+      res.clearCookie(stateKey);
+
+      const authOptions = {
+        url: 'https://accounts.spotify.com/api/token',
+        form: {
+          code,
+          redirect_uri,
+          grant_type: 'client_credentials',
+        },
+        headers: {
+          Authorization: `Basic ${(Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64'))}`,
+        },
+        json: true,
+      };
+
+      request.post(authOptions, (err, response, body) => {
+        if (err || response.statusCode !== 200) {
+          return res.json({
+            e: err,
+          });
+        }
+        const { access_token } = body;
+        res.cookie('token', access_token);
+        return res.redirect('back');
+      });
+    } catch (e) {
+      console.log(e);
+    }
   },
 
 };
