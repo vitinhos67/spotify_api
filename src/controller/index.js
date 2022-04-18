@@ -23,10 +23,13 @@ module.exports = {
         return res.redirect('/token');
       }
 
-      const idTrack = '11dFghVXANMlKmJXsNCbNl';
+      const artists = {
+        palace: '48vDIufGC8ujPuBiTxY8dm',
+        slaquem: '11dFghVXANMlKmJXsNCbNl',
+      };
 
       const response = await axios({
-        url: `${endpoint}/v1/tracks/${idTrack}`,
+        url: `${endpoint}/v1/artists/${artists.palace}`,
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -42,7 +45,7 @@ module.exports = {
       }
 
       return res.json({
-        data,
+        response: data,
       });
     } catch (e) {
       return res.status(401).json({
@@ -51,6 +54,7 @@ module.exports = {
     }
   },
   /// ////////////////
+
   async storeToken(req, res) {
     try {
       const state = generateRandomString(16);
@@ -116,4 +120,37 @@ module.exports = {
     }
   },
 
+  async search(req, res) {
+    try {
+      const token = req.cookies.token || null;
+
+      if (!token) {
+        return res.redirect('/token');
+      }
+
+      const { track } = req.query;
+
+      if (!track) {
+        res.status(401).json({
+          e: 'Pass a query',
+        });
+      }
+
+      const response = await axios({
+        url: `https://api.spotify.com/v1/search?q=${track}&type=track&limit=10`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.json({
+        response: response.data,
+
+      });
+    } catch (e) {
+      return res.status(401).json({
+        e,
+      });
+    }
+  },
 };
