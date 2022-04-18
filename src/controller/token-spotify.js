@@ -27,6 +27,7 @@ module.exports = {
 
       const url = `https://accounts.spotify.com/authorize?${query}`;
 
+      res.set('content-type', 'application/json');
       res.redirect(url);
     } catch (e) {
       console.log(e);
@@ -53,6 +54,7 @@ module.exports = {
           code,
           redirect_uri,
           grant_type: 'client_credentials',
+          'content-type': 'application/x-www-form-urlencoded',
         },
         headers: {
           Authorization: `Basic ${(Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64'))}`,

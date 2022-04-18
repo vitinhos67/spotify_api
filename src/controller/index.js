@@ -4,7 +4,7 @@ const dotenv = require('dotenv').config({
 });
 
 const axios = require('axios');
-const credentials = require('../config/spotify/credentials');
+const credentials = require('../config/credentials');
 
 const { spotifyURL } = credentials;
 const { endpoint } = spotifyURL;
@@ -39,7 +39,7 @@ module.exports = {
           message: 'Result not found.',
         });
       }
-
+      res.set('content-type', 'application/json');
       return res.json({
         response: data,
       });

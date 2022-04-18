@@ -17,6 +17,8 @@
     "express-session": "^1.17.2",
     "fs": "^0.0.1-security",
     "helmet": "^5.0.2",
+    "mongodb": "^4.5.0",
+    "mongoose": "^6.3.0",
     "node-fetch": "^3.2.3",
     "querystring": "^0.2.1",
     "request": "^2.88.2"

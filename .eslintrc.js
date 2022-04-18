@@ -14,6 +14,7 @@ module.exports = {
     'no-console': 0,
     camelcase: 0,
     'consistent-return': 0,
+    'global-require': 0,
 
   },
 };
