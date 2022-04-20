@@ -27,7 +27,6 @@ module.exports = {
 
       const url = `https://accounts.spotify.com/authorize?${query}`;
 
-      res.set('content-type', 'application/json');
       res.redirect(url);
     } catch (e) {
       console.log(e);

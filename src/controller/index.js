@@ -11,7 +11,7 @@ const { endpoint } = spotifyURL;
 
 module.exports = {
 
-  async home(req, res) {
+  async findTrackOrArtist(req, res) {
     try {
       const token = req.cookies.token || null;
 
@@ -19,29 +19,31 @@ module.exports = {
         return res.redirect('/token');
       }
 
-      const artists = {
-        palace: '48vDIufGC8ujPuBiTxY8dm',
-        slaquem: '11dFghVXANMlKmJXsNCbNl',
-      };
+      const { q } = req.query;
 
-      const response = await axios({
-        url: `${endpoint}/v1/artists/${artists.palace}`,
+      if (!q) {
+        return res.status(401).json({
+          error: 'no_query',
+        });
+      }
+      const search = await axios({
         method: 'GET',
+        url: `${endpoint}/v1/search?q=${q}&type=track&limit=1`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      const { data } = response;
+      const { data } = search;
 
       if (data.status === '404') {
         return res.json({
           message: 'Result not found.',
         });
       }
-      res.set('content-type', 'application/json');
+
       return res.json({
-        response: data,
+        response: data.tracks,
+
       });
     } catch (e) {
       return res.status(401).json({
