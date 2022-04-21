@@ -26,7 +26,6 @@ module.exports = {
       res.cookie(stateKey, state);
 
       const url = `https://accounts.spotify.com/authorize?${query}`;
-
       res.redirect(url);
     } catch (e) {
       console.log(e);
