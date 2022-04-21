@@ -15,6 +15,7 @@ module.exports = {
     camelcase: 0,
     'consistent-return': 0,
     'global-require': 0,
+    'new-cap': 0,
 
   },
 };

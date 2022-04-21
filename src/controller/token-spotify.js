@@ -60,7 +60,7 @@ module.exports = {
         json: true,
       };
 
-      request.post(authOptions, (err, response, body) => {
+      request.post(authOptions, async (err, response, body) => {
         if (err || response.statusCode !== 200) {
           return res.json({
             e: err,
@@ -68,6 +68,7 @@ module.exports = {
         }
         const { access_token } = body;
         res.cookie('token', access_token);
+
         return res.redirect('back');
       });
     } catch (e) {

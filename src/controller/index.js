@@ -14,12 +14,7 @@ module.exports = {
 
   async findTrackOrArtist(req, res) {
     try {
-      const token = req.cookies.token || null;
-
-      if (!token) {
-        return res.redirect('/token');
-      }
-
+      const { token } = req.cookies;
       const { searchTrack } = req.body;
       const { q } = req.query;
 
@@ -59,41 +54,4 @@ module.exports = {
     }
   },
 
-  async search(req, res) {
-    try {
-      const token = req.cookies.token || null;
-
-      if (!token) {
-        return res.redirect('/token');
-      }
-
-      const { track } = req.query;
-
-      if (!track) {
-        res.status(401).json({
-          e: 'Pass a query',
-        });
-      }
-
-      const response = await axios({
-        url: `https://api.spotify.com/v1/search?q=${track}&type=track,artist&limit=15`,
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return res.json({
-        response: response.data,
-
-      });
-    } catch (e) {
-      return res.status(401).json({
-        e,
-      });
-    }
-  },
-
-  say(req, res) {
-    res.json({ hello: 'ola' });
-  },
 };
