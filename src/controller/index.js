@@ -14,7 +14,12 @@ module.exports = {
 
   async findTrackOrArtist(req, res) {
     try {
-      const { token } = req.cookies;
+      const token = req.cookies.token || null;
+
+      if (!token) {
+        return res.redirect('/token');
+      }
+
       const { searchTrack } = req.body;
       const { q } = req.query;
 
