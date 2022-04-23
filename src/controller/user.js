@@ -1,5 +1,6 @@
 const validator = require('validator');
 const bcryptjs = require('bcryptjs');
+
 const User = require('../model/User');
 
 module.exports = {
@@ -52,6 +53,18 @@ module.exports = {
       return res.status(401).json({
         e,
       });
+    }
+  },
+
+  async show(req, res) {
+    try {
+      const users = await User.find();
+
+      return res.status(200).json({
+        users,
+      });
+    } catch (e) {
+      console.log(e);
     }
   },
 

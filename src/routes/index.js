@@ -8,6 +8,7 @@ const user = require('../controller/user');
 
 // ROUTE FOR CREATE/DELETE/UPTADE/READ USER
 routes.post('/user', user.store);
+routes.get('/user', user.show);
 
 // ROUTE TO PROCESSING/REDIRECT/CREATE OF TOKEN
 routes.get('/token', token_procedure.redirectToAuthorizedURI);
