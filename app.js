@@ -3,13 +3,11 @@ const express = require('express');
 const helmet = require('helmet');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
 const credentials = require('./src/config/credentials');
 
 const { configs } = credentials;
+const app = express();
+const PORT = process.env.PORT || 3000;
 const routes = require('./src/routes');
 
 (async () => {
