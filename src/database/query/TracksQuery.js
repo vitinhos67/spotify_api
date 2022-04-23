@@ -1,6 +1,7 @@
-const { InvalidArgumentError } = require('../../model/errors');
-
 const User = require('../schemas/User');
+
+// $in - Search for items that have
+// $nin - Search for items that dont have
 
 module.exports = {
 
@@ -10,12 +11,10 @@ module.exports = {
         { id },
         { $push: { tracks_liked: track_id } },
       );
+
       return add_track;
     } catch (e) {
-      if (e) {
-        console.log(e);
-        throw new InvalidArgumentError('internal error');
-      }
+      console.log(e);
     }
   },
   async removeTrackInList({ id, track_id }) {
@@ -25,14 +24,22 @@ module.exports = {
         { $pull: { tracks_liked: track_id } },
       );
       if (!remove_track) {
-        throw new InvalidArgumentError('track not find');
+        return Boolean(0);
       }
 
-      return remove_track;
+      return Boolean(1);
     } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        console.log(e);
-      }
+      console.log(e.message);
+    }
+  },
+
+  async findTrack(id, track_id) {
+    try {
+      const track = await User.findOne({ id, tracks_liked: { $in: [track_id] } });
+      console.log(track);
+      return track;
+    } catch (e) {
+      console.log(e.message);
     }
   },
 

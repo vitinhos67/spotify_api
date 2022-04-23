@@ -1,4 +1,3 @@
-const axios = require('axios');
 const Spotify = require('node-spotify-api');
 
 const credentials = require('../config/credentials');
@@ -12,20 +11,16 @@ const spotify = new Spotify({
 });
 
 const TracksQuery = require('../database/query/TracksQuery');
-
-const { InvalidArgumentError } = require('../model/errors');
+const Tracks = require('../model/Tracks');
+const {
+  InvalidArgumentError, ValueAlreadyExists, InternalServerError, ValueNotFound,
+} = require('../model/errors');
 const basics_to_request_tracks = require('../../functions/basics-to-request-track');
 
 module.exports = {
 
   async findTrack(req, res) {
     try {
-      const token = req.cookies.token || null;
-
-      if (!token) {
-        return res.redirect('/token');
-      }
-
       const { searchTrack } = req.body;
       const { q } = req.query;
 
@@ -39,28 +34,15 @@ module.exports = {
         }
       }
 
-      const response = await axios({
-        method: 'GET',
-        url: `${endpoint}/v1/search?q=${q}&type=track&limit=1`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const { data } = response;
-
-      if (data.status === '404') {
-        return res.json({
-          message: 'u not found.',
-        });
-      }
+      const response = await spotify.request(`${endpoint}/v1/search?q=${q}&type=track&limit=10`);
 
       return res.json({
-        response: data.tracks,
+        response,
 
       });
     } catch (e) {
       return res.status(401).json({
-        error: e,
+        error: e.message,
       });
     }
   },
@@ -109,10 +91,12 @@ module.exports = {
     try {
       const values = await basics_to_request_tracks.basics(req);
 
-      const find_track = await spotify.request(`${endpoint}/v1/tracks/${values.track_id}`);
+      // const find_track = await spotify.request(`${endpoint}/v1/tracks/${values.track_id}`);
 
-      if (!find_track) {
-        throw new InvalidArgumentError('track not find');
+      const verify = await Tracks.verify(values.user.id, values.track_id);
+
+      if (verify) {
+        throw new ValueAlreadyExists('Values already Exists');
       }
 
       const track = await TracksQuery.addTrackInList({
@@ -126,13 +110,32 @@ module.exports = {
 
       return res.status(200).json(track);
     } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        res.status(403).json(e);
+      const objError = {
+        e,
+        error_message: e.message,
+      };
+
+      if (e instanceof InternalServerError) {
+        return res.status(400).json(objError);
       }
 
-      return res.status(500).json({
-        e: e.message,
-      });
+      if (e instanceof InvalidArgumentError) {
+        return res.status(403).json(objError);
+      }
+
+      if (e instanceof ValueAlreadyExists) {
+        return res.status(401).json({
+          message: e.message,
+        });
+      }
+      if (e instanceof ValueNotFound) {
+        return res.status(404).json({
+          message: e.message,
+        });
+      }
+      if (e) {
+        return res.status(500).json(objError);
+      }
     }
   },
 
@@ -147,10 +150,9 @@ module.exports = {
       }
 
       const removedTrack = await TracksQuery.removeTrackInList({
-        id_user: values.user.id,
+        id: values.user.id,
         track_id: values.track_id,
       });
-      console.log(removedTrack);
 
       if (!removedTrack) {
         throw new InvalidArgumentError("Track don't removed");

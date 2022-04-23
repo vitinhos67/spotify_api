@@ -19,5 +19,6 @@ module.exports = {
     'linebreak-style': 0,
     'no-underscore-dangle': 0,
     'no-plusplus': 0,
+    'max-classes-per-file': ['error', 10],
   },
 };
