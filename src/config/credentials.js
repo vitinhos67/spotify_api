@@ -15,6 +15,7 @@ const spotifyURL = {
 const configs = {
   sess: process.env.SECRET,
   mongodb_uri: process.env.MONGODB_URI,
+  json_web_secret: process.env.JSON_WEB_SECRET,
 
 };
 
