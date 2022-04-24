@@ -1,6 +1,9 @@
 const validator = require('validator');
 const bcryptjs = require('bcryptjs');
+const jwt = require('../../functions/jwt');
+const credentials = require('../config/credentials').configs;
 
+const { secret } = credentials.json_web_secret;
 const User = require('../model/User');
 
 module.exports = {
@@ -66,6 +69,33 @@ module.exports = {
     } catch (e) {
       console.log(e);
     }
+  },
+
+  async uptadeUser(req, res) {
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+      return res.status(401).json({
+        status: 401,
+        statusMessage: 'not_header_authorization',
+
+      });
+    }
+
+    const [, token] = authorization.split(' ');
+
+    const user = jwt.verify(token, secret);
+
+    if (!user) {
+      return res.status(401).json({
+        statusCode: 401,
+        status_message: 'user_not_find',
+      });
+    }
+
+    return res.status(200).json({
+      user,
+    });
   },
 
 };

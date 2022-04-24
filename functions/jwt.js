@@ -8,7 +8,7 @@ const secret = credentials.json_web_secret;
 
 module.exports = {
 
-  createToken(payload) {
+  sign(payload) {
     return jwt.sign(payload, secret, {
       expiresIn: '7d',
     });
