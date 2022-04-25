@@ -1,9 +1,7 @@
 const validator = require('validator');
 const bcryptjs = require('bcryptjs');
-const jwt = require('../../functions/jwt');
-const credentials = require('../config/credentials').configs;
+const { verify } = require('../../functions/jwt');
 
-const { secret } = credentials.json_web_secret;
 const User = require('../model/User');
 
 module.exports = {
@@ -71,31 +69,71 @@ module.exports = {
     }
   },
 
-  async uptadeUser(req, res) {
-    const { authorization } = req.headers;
+  async uptadeUsername(req, res) {
+    try {
+      const { authorization } = req.headers;
+      const { username } = req.body;
 
-    if (!authorization) {
-      return res.status(401).json({
-        status: 401,
-        statusMessage: 'not_header_authorization',
+      if (!authorization) {
+        return res.status(401).json({
+          status: 401,
+          statusMessage: 'not_header_authorization',
+
+        });
+      }
+
+      if (!username) {
+        return res.status(401).json({
+          status: 401,
+          statusMessage: 'undefined_username',
+
+        });
+      }
+
+      const [, token] = authorization.split(' ');
+
+      const decryptUser = verify(token);
+
+      if (!decryptUser) {
+        return res.status(401).json({
+          statusCode: 401,
+          status_message: 'user_not_find',
+        });
+      }
+
+      const user = await User.find({
+        email: decryptUser.email,
+      });
+
+      if (user[0].username === username) {
+        return res.status(200).json({
+          statusCode: 200,
+          status_message: 'username_already_in_use',
+        });
+      }
+
+      const updateUser = await User.findOneAndUpdate({
+        email: decryptUser.email,
+      }, {
+        username,
+      });
+
+      return res.status(200).json({
+        statusCode: 200,
+        statusMessage: 'user_update_successfully',
+        old_username: decryptUser.username,
+        data: {
+          newUser: updateUser,
+        },
 
       });
-    }
-
-    const [, token] = authorization.split(' ');
-
-    const user = jwt.verify(token, secret);
-
-    if (!user) {
+    } catch (e) {
       return res.status(401).json({
-        statusCode: 401,
-        status_message: 'user_not_find',
+        statusCode: 404,
+        status_message: 'internal_error',
+        e,
       });
     }
-
-    return res.status(200).json({
-      user,
-    });
   },
 
 };
