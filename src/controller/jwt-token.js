@@ -23,7 +23,7 @@ module.exports = {
       if (!user) {
         return res.status(401).json({
           statusCode: 401,
-          statusMessage: 'user_not_found',
+          statusMessage: 'user_not_founded',
         });
       }
 
