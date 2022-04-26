@@ -37,7 +37,7 @@ module.exports = {
         });
       }
 
-      const salt = bcryptjs.genSaltSync();
+      const salt = bcryptjs.genSaltSync(10);
       const hash = bcryptjs.hashSync(password, salt);
 
       const userCreate = await User.create({
@@ -230,6 +230,91 @@ module.exports = {
         data: e,
       });
     }
+  },
+
+  async updatePassword(req, res) {
+    const { authorization } = req.headers;
+    const { password, new_password, confirm_password } = req.body;
+
+    if (!authorization) {
+      return res.status(401).json({
+        status: 401,
+        statusMessage: 'not_header_authorization',
+
+      });
+    }
+
+    if (!password || !new_password || !confirm_password) {
+      return res.status(401).json({
+        status: 401,
+        statusMessage: 'values_undefined',
+        prop: [
+          'password',
+          'new_password',
+          'confirm_password',
+        ],
+        body: {
+          password,
+          new_password,
+          confirm_password,
+        },
+      });
+    }
+
+    const [, token] = authorization.split(' ');
+
+    const decryptUser = verify(token);
+
+    if (!decryptUser) {
+      return res.status(401).json({
+        statusCode: 401,
+        status_message: 'user_not_find',
+      });
+    }
+
+    const user = await User.findById(decryptUser.id);
+
+    if (!user) {
+      return res.status(401).json({
+        status: 401,
+        statusMessage: 'not_user',
+        data: {
+          user,
+        },
+      });
+    }
+
+    const decryptPassword = bcryptjs.compareSync(password, user.password);
+    console.log(decryptPassword);
+    if (!decryptPassword) {
+      return res.status(401).json({
+        status: 401,
+        statusMessage: 'password_is_invalid',
+      });
+    }
+
+    if (confirm_password !== new_password) {
+      return res.status(401).json({
+        status: 401,
+        statusMessage: 'different_passwords',
+      });
+    }
+
+    const salt = bcryptjs.genSaltSync(10);
+    const hash = await bcryptjs.hash(new_password, salt);
+
+    const updatePassword = await User.findByIdAndUpdate(user.id, {
+      password: hash,
+    });
+
+    return res.status(200).json({
+      statusCode: 200,
+      statusMessage: 'password_update_successfully',
+      data: {
+        old_password: user.password,
+        new_password: updatePassword.password,
+      },
+    });
   },
 
 };

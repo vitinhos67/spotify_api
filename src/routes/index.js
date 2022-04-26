@@ -12,6 +12,7 @@ routes.post('/user', user.store);
 routes.get('/user', user.show);
 routes.post('/user/update/username', user.updateUsername);
 routes.post('/user/update/email', user.updateEmail);
+routes.post('/user/update/password', user.updatePassword);
 
 // ROUTE TO PROCESSING/REDIRECT/CREATE OF TOKEN SPOTIFY
 routes.get('/token', token_procedure.redirectToAuthorizedURI);
