@@ -70,7 +70,7 @@ module.exports = {
     }
   },
 
-  async uptadeUsername(req, res) {
+  async updateUsername(req, res) {
     try {
       const { authorization } = req.headers;
       const { username } = req.body;
@@ -141,7 +141,7 @@ module.exports = {
     }
   },
 
-  async uptadeEmail(req, res) {
+  async updateEmail(req, res) {
     try {
       const { authorization } = req.headers;
       const { email } = req.body;
