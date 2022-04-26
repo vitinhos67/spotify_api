@@ -1,5 +1,6 @@
 const validator = require('validator');
 const bcryptjs = require('bcryptjs');
+
 const { verify } = require('../../functions/jwt');
 
 const User = require('../model/User');
@@ -101,37 +102,132 @@ module.exports = {
         });
       }
 
-      const user = await User.find({
-        email: decryptUser.email,
-      });
+      const user = await User.findOne({ id: decryptUser.id });
 
-      if (user[0].username === username) {
-        return res.status(200).json({
-          statusCode: 200,
+      if (!user) {
+        return res.status(401).json({
+          statusCode: 401,
+          status_message: 'user_invalid',
+        });
+      }
+
+      if (user.username === username) {
+        return res.status(401).json({
+          statusCode: 401,
           status_message: 'username_already_in_use',
         });
       }
 
-      const updateUser = await User.findOneAndUpdate({
-        email: decryptUser.email,
-      }, {
+      await User.findOneAndUpdate({ email: user.email }, {
         username,
       });
 
       return res.status(200).json({
         statusCode: 200,
         statusMessage: 'user_update_successfully',
-        old_username: decryptUser.username,
+        old_username: user.username,
         data: {
-          newUser: updateUser,
+          new_username: username,
+
         },
 
       });
     } catch (e) {
-      return res.status(401).json({
-        statusCode: 404,
-        status_message: 'internal_error',
-        e,
+      res.status(401).json({
+        statusCode: 401,
+        statusMessage: 'internal_error',
+        data: e,
+      });
+    }
+  },
+
+  async uptadeEmail(req, res) {
+    try {
+      const { authorization } = req.headers;
+      const { email } = req.body;
+
+      if (!authorization) {
+        return res.status(401).json({
+          status: 401,
+          statusMessage: 'not_header_authorization',
+
+        });
+      }
+
+      if (!email) {
+        return res.status(401).json({
+          status: 401,
+          statusMessage: 'undefined_email',
+
+        });
+      }
+
+      const [, token] = authorization.split(' ');
+
+      const decryptUser = verify(token);
+
+      if (!decryptUser) {
+        return res.status(401).json({
+          statusCode: 401,
+          status_message: 'user_not_find',
+        });
+      }
+
+      const user = await User.findOne({ id: decryptUser.id });
+
+      if (!user) {
+        return res.status(401).json({
+          statusCode: 401,
+          status_message: 'user_invalid',
+        });
+      }
+
+      if (user.email === email) {
+        return res.status(401).json({
+          statusCode: 401,
+          status_message: 'email_address_already_registered',
+        });
+      }
+
+      const checkIfEmailIsUse = await User.findOne({
+        email,
+      });
+
+      if (checkIfEmailIsUse) {
+        return res.status(401).json({
+          statusCode: 401,
+          statusMessage: 'email_already_in_use',
+
+        });
+      }
+
+      if (!validator.isEmail(email)) {
+        return res.status(401).json({
+          statusCode: 401,
+          statusMessage: 'email_not_supported',
+
+        });
+      }
+
+      await User.findOneAndUpdate({ email: user.email }, {
+        email,
+      });
+
+      return res.status(200).json({
+        statusCode: 200,
+        statusMessage: 'user_update_successfully',
+        old_email: user.email,
+        data: {
+          new_email: email,
+
+        },
+
+      });
+    } catch (e) {
+      res.status(401).json({
+        statusCode: 401,
+        statusMessage: 'internal_error',
+        data: e,
       });
     }
   },

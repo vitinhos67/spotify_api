@@ -37,8 +37,7 @@ module.exports = {
       }
 
       const value = {
-        username: user.username,
-        email: user.email,
+        id: user.id,
       };
 
       const token = sign(value);
