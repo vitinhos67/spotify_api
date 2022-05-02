@@ -3,7 +3,10 @@ const express = require('express');
 const helmet = require('helmet');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const credentials = require('./src/config/credentials');
+
+// use it before all route definitions
 
 const { configs } = credentials;
 const app = express();
@@ -16,7 +19,7 @@ const routes = require('./src/routes');
   require('./src/database');
 
   /** database * */
-
+  app.use(cors({ origin: 'http://localhost:3000' }));
   app.use(helmet());
   app.use(express.json());
   app.use(cookieParser());

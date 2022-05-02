@@ -11,13 +11,13 @@ module.exports = {
       const { username, email, password } = req.body;
 
       if (!username || !email || !password) {
-        return res.status(401).json({
+        return res.status(400).json({
           message_error: 'need_all_param',
         });
       }
 
       if (!validator.isEmail(email)) {
-        return res.status(401).json({
+        return res.status(400).json({
           message_error: 'format_invalid_email',
         });
       }
@@ -25,13 +25,13 @@ module.exports = {
       const user = await User.findOne({ email });
 
       if (user) {
-        return res.status(401).json({
+        return res.status(400).json({
           message: 'email_already_in_use',
         });
       }
 
       if (password <= 3 || password >= 50) {
-        return res.status(401).json({
+        return res.status(400).json({
           message: 'format_invalid_password',
           format: 'between in 3 to 50 characters',
         });
@@ -52,7 +52,7 @@ module.exports = {
         user: userCreate,
       });
     } catch (e) {
-      return res.status(401).json({
+      return res.status(400).json({
         e,
       });
     }
@@ -76,16 +76,16 @@ module.exports = {
       const { username } = req.body;
 
       if (!authorization) {
-        return res.status(401).json({
-          status: 401,
+        return res.status(400).json({
+          status: 400,
           statusMessage: 'not_header_authorization',
 
         });
       }
 
       if (!username) {
-        return res.status(401).json({
-          status: 401,
+        return res.status(400).json({
+          status: 400,
           statusMessage: 'undefined_username',
 
         });
@@ -96,8 +96,8 @@ module.exports = {
       const decryptUser = verify(token);
 
       if (!decryptUser) {
-        return res.status(401).json({
-          statusCode: 401,
+        return res.status(400).json({
+          statusCode: 400,
           status_message: 'user_not_find',
         });
       }
@@ -105,15 +105,15 @@ module.exports = {
       const user = await User.findOne({ id: decryptUser.id });
 
       if (!user) {
-        return res.status(401).json({
-          statusCode: 401,
+        return res.status(400).json({
+          statusCode: 400,
           status_message: 'user_invalid',
         });
       }
 
       if (user.username === username) {
-        return res.status(401).json({
-          statusCode: 401,
+        return res.status(400).json({
+          statusCode: 400,
           status_message: 'username_already_in_use',
         });
       }
@@ -133,8 +133,8 @@ module.exports = {
 
       });
     } catch (e) {
-      res.status(401).json({
-        statusCode: 401,
+      res.status(400).json({
+        statusCode: 400,
         statusMessage: 'internal_error',
         data: e,
       });
@@ -147,16 +147,16 @@ module.exports = {
       const { email } = req.body;
 
       if (!authorization) {
-        return res.status(401).json({
-          status: 401,
+        return res.status(400).json({
+          status: 400,
           statusMessage: 'not_header_authorization',
 
         });
       }
 
       if (!email) {
-        return res.status(401).json({
-          status: 401,
+        return res.status(400).json({
+          status: 400,
           statusMessage: 'undefined_email',
 
         });
@@ -167,8 +167,8 @@ module.exports = {
       const decryptUser = verify(token);
 
       if (!decryptUser) {
-        return res.status(401).json({
-          statusCode: 401,
+        return res.status(400).json({
+          statusCode: 400,
           status_message: 'user_not_find',
         });
       }
@@ -176,15 +176,15 @@ module.exports = {
       const user = await User.findOne({ id: decryptUser.id });
 
       if (!user) {
-        return res.status(401).json({
-          statusCode: 401,
+        return res.status(400).json({
+          statusCode: 400,
           status_message: 'user_invalid',
         });
       }
 
       if (user.email === email) {
-        return res.status(401).json({
-          statusCode: 401,
+        return res.status(400).json({
+          statusCode: 400,
           status_message: 'email_address_already_registered',
         });
       }
@@ -194,16 +194,16 @@ module.exports = {
       });
 
       if (checkIfEmailIsUse) {
-        return res.status(401).json({
-          statusCode: 401,
+        return res.status(400).json({
+          statusCode: 400,
           statusMessage: 'email_already_in_use',
 
         });
       }
 
       if (!validator.isEmail(email)) {
-        return res.status(401).json({
-          statusCode: 401,
+        return res.status(400).json({
+          statusCode: 400,
           statusMessage: 'email_not_supported',
 
         });
@@ -224,8 +224,8 @@ module.exports = {
 
       });
     } catch (e) {
-      res.status(401).json({
-        statusCode: 401,
+      res.status(400).json({
+        statusCode: 400,
         statusMessage: 'internal_error',
         data: e,
       });
@@ -237,16 +237,16 @@ module.exports = {
     const { password, new_password, confirm_password } = req.body;
 
     if (!authorization) {
-      return res.status(401).json({
-        status: 401,
+      return res.status(400).json({
+        status: 400,
         statusMessage: 'not_header_authorization',
 
       });
     }
 
     if (!password || !new_password || !confirm_password) {
-      return res.status(401).json({
-        status: 401,
+      return res.status(400).json({
+        status: 400,
         statusMessage: 'values_undefined',
         prop: [
           'password',
@@ -266,8 +266,8 @@ module.exports = {
     const decryptUser = verify(token);
 
     if (!decryptUser) {
-      return res.status(401).json({
-        statusCode: 401,
+      return res.status(400).json({
+        statusCode: 400,
         status_message: 'user_not_find',
       });
     }
@@ -275,8 +275,8 @@ module.exports = {
     const user = await User.findById(decryptUser.id);
 
     if (!user) {
-      return res.status(401).json({
-        status: 401,
+      return res.status(400).json({
+        status: 400,
         statusMessage: 'not_user',
         data: {
           user,
@@ -287,15 +287,15 @@ module.exports = {
     const decryptPassword = bcryptjs.compareSync(password, user.password);
     console.log(decryptPassword);
     if (!decryptPassword) {
-      return res.status(401).json({
-        status: 401,
+      return res.status(400).json({
+        status: 400,
         statusMessage: 'password_is_invalid',
       });
     }
 
     if (confirm_password !== new_password) {
-      return res.status(401).json({
-        status: 401,
+      return res.status(400).json({
+        status: 400,
         statusMessage: 'different_passwords',
       });
     }

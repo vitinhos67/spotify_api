@@ -25,7 +25,7 @@ module.exports = {
 
       if (!searchTrack && searchTrack == null) {
         if (!q) {
-          return res.status(401).json({
+          return res.status(400).json({
             error: {
               message: 'no_query',
             },
