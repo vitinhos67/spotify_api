@@ -6,8 +6,6 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const credentials = require('./src/config/credentials');
 
-// use it before all route definitions
-
 const { configs } = credentials;
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,8 +32,4 @@ const routes = require('./src/routes');
   app.listen(PORT, () => {
     console.log(`Listening PORT ${PORT}`);
   });
-
-  module.exports = {
-    app,
-  };
 })();
