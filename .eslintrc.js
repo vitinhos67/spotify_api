@@ -16,6 +16,7 @@ module.exports = {
     'consistent-return': 0,
     'global-require': 0,
     'new-cap': 0,
+    'linebreak-style': 0,
 
   },
 };

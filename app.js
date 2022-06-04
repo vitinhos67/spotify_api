@@ -17,7 +17,7 @@ const routes = require('./src/routes');
   require('./src/database');
 
   /** database * */
-  app.use(cors({ origin: 'http://localhost:3000' }));
+  app.use(cors({ origin: '*' }));
   app.use(helmet());
   app.use(express.json());
   app.use(cookieParser());
