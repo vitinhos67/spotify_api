@@ -25,6 +25,7 @@
     "mongodb": "^4.5.0",
     "mongoose": "^6.3.0",
     "node-fetch": "^3.2.3",
+    "node-spotify-api": "^1.1.1",
     "querystring": "^0.2.1",
     "request": "^2.88.2",
     "validator": "^13.7.0"

@@ -5,10 +5,16 @@ const dotenv = require('dotenv').config({
 
 const axios = require('axios');
 
+const Spotify = require('node-spotify-api');
 const credentials = require('../config/credentials');
 
-const { spotifyURL } = credentials;
+const { spotifyURL, spotifyKeys } = credentials;
 const { endpoint } = spotifyURL;
+
+const spotify = new Spotify({
+  id: spotifyKeys.client_id,
+  secret: spotifyKeys.client_secret,
+});
 
 module.exports = {
 
@@ -44,7 +50,7 @@ module.exports = {
 
       if (data.status === '404') {
         return res.json({
-          message: 'Result not found.',
+          message: 'u not found.',
         });
       }
 
@@ -57,6 +63,33 @@ module.exports = {
         error: e,
       });
     }
+  },
+
+  async createPlaylist(req, res) {
+    const { q } = req.query;
+
+    if (!q) {
+      return res.status(401).json({
+        data: 'not_query',
+      });
+    }
+
+    spotify.request(`https://api.spotify.com/v1/search?q=${q}&type=album,artist`)
+      .then((data) => {
+        const results = [];
+
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < data.albums.items.length; i++) {
+          results.push(data.albums.items[i].artists);
+        }
+
+        return res.json({
+          data: results,
+        });
+      })
+      .catch((err) => {
+        console.error(`Error occurred: ${err}`);
+      });
   },
 
 };
