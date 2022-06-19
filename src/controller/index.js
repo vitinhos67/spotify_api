@@ -74,18 +74,21 @@ module.exports = {
       });
     }
 
-    spotify.request(`https://api.spotify.com/v1/search?q=${q}&type=album,artist`)
+    spotify.request(`https://api.spotify.com/v1/search?q=${q}&type=track`)
       .then((data) => {
         const results = [];
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < data.albums.items.length; i++) {
-          results.push(data.albums.items[i].artists);
+        for (let i = 0; i < data.tracks.items.length; i++) {
+          results.push({
+            artists: data.tracks.items[i].album.artists,
+            name_track: data.tracks.items[i].name,
+            id: data.tracks.items[i].id,
+            images: data.tracks.items[i].images || 'NOT IMAGE',
+          });
         }
 
-        return res.json({
-          data: results,
-        });
+        return res.json(results);
       })
       .catch((err) => {
         console.error(`Error occurred: ${err}`);
