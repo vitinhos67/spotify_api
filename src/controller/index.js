@@ -81,10 +81,13 @@ module.exports = {
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < data.tracks.items.length; i++) {
           results.push({
+
             artists: data.tracks.items[i].album.artists,
             name_track: data.tracks.items[i].name,
             id: data.tracks.items[i].id,
-            images: data.tracks.items[i].images || 'NOT IMAGE',
+            external_urls: data.tracks.items[i].external_urls,
+            images: data.tracks.items[i].images.url,
+
           });
         }
 
