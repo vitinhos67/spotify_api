@@ -18,7 +18,7 @@ const spotify = new Spotify({
 
 module.exports = {
 
-  async findTrackOrArtist(req, res) {
+  async findTrack(req, res) {
     try {
       const token = req.cookies.token || null;
 
