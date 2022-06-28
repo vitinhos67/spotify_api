@@ -4,8 +4,11 @@ const dotenv = require('dotenv').config({
 });
 
 const axios = require('axios');
+const underscore = require('underscore');
 
+const { omit } = underscore;
 const Spotify = require('node-spotify-api');
+
 const credentials = require('../config/credentials');
 
 const { spotifyURL, spotifyKeys } = credentials;
@@ -75,24 +78,7 @@ module.exports = {
     }
 
     spotify.request(`https://api.spotify.com/v1/search?q=${q}&type=track`)
-      .then((data) => {
-        const results = [];
-
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < data.tracks.items.length; i++) {
-          results.push({
-
-            artists: data.tracks.items[i].album.artists,
-            name_track: data.tracks.items[i].name,
-            id: data.tracks.items[i].id,
-            external_urls: data.tracks.items[i].external_urls,
-            images: data.tracks.items[i].images.url,
-
-          });
-        }
-
-        return res.json(results);
-      })
+      .then((data) => res.json(data))
       .catch((err) => {
         console.error(`Error occurred: ${err}`);
       });
