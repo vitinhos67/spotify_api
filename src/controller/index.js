@@ -4,9 +4,7 @@ const dotenv = require('dotenv').config({
 });
 
 const axios = require('axios');
-const underscore = require('underscore');
 
-const { omit } = underscore;
 const Spotify = require('node-spotify-api');
 
 const credentials = require('../config/credentials');
