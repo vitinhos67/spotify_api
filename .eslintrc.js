@@ -17,6 +17,7 @@ module.exports = {
     'global-require': 0,
     'new-cap': 0,
     'linebreak-style': 0,
+    'no-underscore-dangle': 0,
 
   },
 };

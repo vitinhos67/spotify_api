@@ -3,57 +3,28 @@ const bcryptjs = require('bcryptjs');
 
 const { verify } = require('../../functions/jwt');
 
-const User = require('../model/User');
+const User = require('../database/schemas/User');
+const modelUser = require('../model/User');
+const { InvalidArgumentError } = require('../model/errors');
 
 module.exports = {
   async store(req, res) {
     try {
       const { username, email, password } = req.body;
+      const user = new modelUser(username, email, password);
+      const userCreate = await user.create();
 
-      if (!username || !email || !password) {
-        return res.status(400).json({
-          message_error: 'need_all_param',
-        });
-      }
-
-      if (!validator.isEmail(email)) {
-        return res.status(400).json({
-          message_error: 'format_invalid_email',
-        });
-      }
-
-      const user = await User.findOne({ email });
-
-      if (user) {
-        return res.status(400).json({
-          message: 'email_already_in_use',
-        });
-      }
-
-      if (password <= 3 || password >= 50) {
-        return res.status(400).json({
-          message: 'format_invalid_password',
-          format: 'between in 3 to 50 characters',
-        });
-      }
-
-      const salt = bcryptjs.genSaltSync(10);
-      const hash = bcryptjs.hashSync(password, salt);
-
-      const userCreate = await User.create({
-        username,
-        email,
-        password: hash,
-      });
-
-      return res.status(200).json({
-        status: 200,
-        method: 'post',
-        user: userCreate,
-      });
+      return res.status(200).json({ userCreate });
     } catch (e) {
+      if (e instanceof InvalidArgumentError) {
+        return res.status(403).json({
+          e: e.message,
+        });
+      }
+
       return res.status(400).json({
-        e,
+        error: e,
+        e: e.message,
       });
     }
   },

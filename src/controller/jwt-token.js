@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const User = require('../model/User');
+const User = require('../database/schemas/User');
 const { sign } = require('../../functions/jwt');
 
 module.exports = {
