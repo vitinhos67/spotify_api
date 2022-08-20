@@ -19,9 +19,9 @@ class User {
   checkPasswordAndHash() {
     if (!this._password) throw new InvalidArgumentError('password not valid');
 
-    // if (this._password <= 3 || this._password >= 50) {
-    //   throw new InvalidArgumentError('password not valid');
-    // }
+    if (this._password.length <= 3 || this._password.length >= 50) {
+      throw new InvalidArgumentError('password not valid');
+    }
 
     const salt = bcryptjs.genSaltSync(10);
     const hash = bcryptjs.hashSync(this._password, salt);

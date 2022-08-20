@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 const credentials = require('../src/config/credentials').configs;
