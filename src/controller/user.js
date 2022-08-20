@@ -1,11 +1,12 @@
 const validator = require('validator');
-const bcryptjs = require('bcryptjs');
+// const bcryptjs = require('bcryptjs');
 
 const { verify } = require('../../functions/jwt');
 
 const User = require('../database/schemas/User');
 const modelUser = require('../model/User');
 const { InvalidArgumentError } = require('../model/errors');
+const UserQuery = require('../database/UserQuery');
 
 module.exports = {
   async store(req, res) {
@@ -204,88 +205,53 @@ module.exports = {
   },
 
   async updatePassword(req, res) {
-    const { authorization } = req.headers;
-    const { password, new_password, confirm_password } = req.body;
+    try {
+      const { authorization } = req.headers;
+      const { password, new_password, confirm_password } = req.body;
 
-    if (!authorization) {
-      return res.status(400).json({
-        status: 400,
-        statusMessage: 'not_header_authorization',
+      if (!authorization) {
+        return res.status(400).json({
+          status: 400,
+          statusMessage: 'not_header_authorization',
 
-      });
-    }
+        });
+      }
 
-    if (!password || !new_password || !confirm_password) {
-      return res.status(400).json({
-        status: 400,
-        statusMessage: 'values_undefined',
-        prop: [
-          'password',
-          'new_password',
-          'confirm_password',
-        ],
-        body: {
-          password,
+      const [, token] = authorization.split(' ');
+      const decryptUser = verify(token);
+
+      if (!decryptUser) {
+        return res.status(500).json({
+          message: 'Internal_Error',
+        });
+      }
+
+      const userFind = await UserQuery.findUserById(decryptUser.id);
+
+      const user = new modelUser(userFind.username, userFind.email, userFind.password);
+
+      const update = await user.updatePassword(
+        userFind.id,
+        { password, new_password, confirm_password },
+      );
+
+      return res.status(200).json({
+        statusCode: 200,
+        statusMessage: 'password_update_successfully',
+        data: {
+          old_password: password,
           new_password,
           confirm_password,
+          update,
         },
       });
+    } catch (e) {
+      if (e instanceof InvalidArgumentError) {
+        res.status(403).json({
+          e: e.message,
+        });
+      }
     }
-
-    const [, token] = authorization.split(' ');
-
-    const decryptUser = verify(token);
-
-    if (!decryptUser) {
-      return res.status(400).json({
-        statusCode: 400,
-        status_message: 'user_not_find',
-      });
-    }
-
-    const user = await User.findById(decryptUser.id);
-
-    if (!user) {
-      return res.status(400).json({
-        status: 400,
-        statusMessage: 'not_user',
-        data: {
-          user,
-        },
-      });
-    }
-
-    const decryptPassword = bcryptjs.compareSync(password, user.password);
-    console.log(decryptPassword);
-    if (!decryptPassword) {
-      return res.status(400).json({
-        status: 400,
-        statusMessage: 'password_is_invalid',
-      });
-    }
-
-    if (confirm_password !== new_password) {
-      return res.status(400).json({
-        status: 400,
-        statusMessage: 'different_passwords',
-      });
-    }
-
-    const salt = bcryptjs.genSaltSync(10);
-    const hash = await bcryptjs.hash(new_password, salt);
-
-    const updatePassword = await User.findByIdAndUpdate(user.id, {
-      password: hash,
-    });
-
-    return res.status(200).json({
-      statusCode: 200,
-      statusMessage: 'password_update_successfully',
-      data: {
-        old_password: user.password,
-        new_password: updatePassword.password,
-      },
-    });
   },
 
 };

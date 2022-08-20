@@ -22,11 +22,14 @@ module.exports = {
     return userCreate;
   },
 
-  async updateField(field, newValue) {
-    const user = await User.findByIdAndUpdate({
-      field: newValue,
-    });
-    return user;
+  async updateFieldPassword(id, newValue) {
+    try {
+      await User.findByIdAndUpdate(id, {
+        password: newValue,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   },
 
 };

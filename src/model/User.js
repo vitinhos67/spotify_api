@@ -30,7 +30,6 @@ class User {
   }
 
   async create() {
-    console.log(this);
     if (!this._username) throw new InvalidArgumentError('username not valid');
 
     if (!this.checkEmail()) {
@@ -44,7 +43,7 @@ class User {
     if (UserAlreadyExist) {
       throw new InvalidArgumentError('User Already Exist.');
     }
-    console.log(password, UserAlreadyExist);
+
     const user = await userQuery.createUser({
       username: this._username,
       email: this._email,
@@ -52,6 +51,44 @@ class User {
     });
 
     return user;
+  }
+
+  async updatePassword(id, { password, new_password, confirm_password }) {
+    if (!this._password || !new_password || !confirm_password) {
+      throw new InvalidArgumentError({
+        status: 400,
+        statusMessage: 'values_undefined',
+        prop: [
+          'password',
+          'new_password',
+          'confirm_password',
+        ],
+        body: {
+          password,
+          new_password,
+          confirm_password,
+        },
+      });
+    }
+
+    const decryptPassword = await bcryptjs.compare(password, this._password);
+
+    if (!decryptPassword) {
+      throw new InvalidArgumentError('Password invalid.');
+    }
+
+    if (new_password !== confirm_password) {
+      throw new InvalidArgumentError('Password_not_accept');
+    }
+
+    const salt = bcryptjs.genSaltSync(10);
+    const hash = await bcryptjs.hash(new_password, salt);
+
+    await userQuery.updateFieldPassword(id, hash);
+
+    return {
+      messageStatus: 'success',
+    };
   }
 }
 
