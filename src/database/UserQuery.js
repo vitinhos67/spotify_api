@@ -32,4 +32,14 @@ module.exports = {
     }
   },
 
+  async updateFieldEmail(id, newValue) {
+    try {
+      await User.findByIdAndUpdate(id, {
+        email: newValue,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  },
+
 };

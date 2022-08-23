@@ -10,13 +10,13 @@ class User {
     this._password = password;
   }
 
-  checkEmail() {
+  _checkEmail() {
     if (!this._email) throw new InvalidArgumentError('Email not defined');
 
     return validator.isEmail(this._email);
   }
 
-  checkPasswordAndHash() {
+  _checkPasswordAndHash() {
     if (!this._password) throw new InvalidArgumentError('password not valid');
 
     if (this._password.length <= 3 || this._password.length >= 50) {
@@ -32,11 +32,11 @@ class User {
   async create() {
     if (!this._username) throw new InvalidArgumentError('username not valid');
 
-    if (!this.checkEmail()) {
+    if (!this._checkEmail()) {
       throw new InvalidArgumentError('Email not valid');
     }
 
-    const password = this.checkPasswordAndHash();
+    const password = this._checkPasswordAndHash();
 
     const UserAlreadyExist = await userQuery.findUserByEmail(this.email);
 
@@ -88,6 +88,34 @@ class User {
 
     return {
       messageStatus: 'success',
+    };
+  }
+
+  async updateEmail(email) {
+    if (!email) {
+      throw new InvalidArgumentError('Email not valid');
+    }
+
+    const email_in_use = await userQuery.findUserByEmail(email);
+
+    if (email_in_use) {
+      throw new Error('Email sendo Usado');
+    }
+
+    if (!validator.isEmail(email)) {
+      throw new InvalidArgumentError('Email not valid');
+    }
+
+    const user = await userQuery.findUserByEmail(this._email);
+
+    if (email === user.email) {
+      throw new InvalidArgumentError('Email in use.');
+    }
+
+    await userQuery.updateFieldEmail(user.id, email);
+
+    return {
+      status_code: 201,
     };
   }
 }

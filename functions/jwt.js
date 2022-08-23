@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { InvalidArgumentError } = require('../src/model/errors');
 
 const credentials = require('../src/config/credentials').configs;
 
@@ -18,7 +19,13 @@ module.exports = {
 
   verify(token) {
     try {
-      return jwt.verify(token, secret);
+      const user = jwt.verify(token, secret);
+
+      if (!user) {
+        throw new InvalidArgumentError('Error: "User not find"');
+      }
+
+      return user;
     } catch (err) {
       console.log(err);
     }

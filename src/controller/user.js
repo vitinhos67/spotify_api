@@ -1,4 +1,3 @@
-const validator = require('validator');
 // const bcryptjs = require('bcryptjs');
 
 const { verify } = require('../../functions/jwt');
@@ -67,13 +66,6 @@ module.exports = {
 
       const decryptUser = verify(token);
 
-      if (!decryptUser) {
-        return res.status(400).json({
-          statusCode: 400,
-          status_message: 'user_not_find',
-        });
-      }
-
       const user = await User.findOne({ id: decryptUser.id });
 
       if (!user) {
@@ -125,27 +117,13 @@ module.exports = {
 
         });
       }
-
-      if (!email) {
-        return res.status(400).json({
-          status: 400,
-          statusMessage: 'undefined_email',
-
-        });
-      }
+      console.log(email);
 
       const [, token] = authorization.split(' ');
 
       const decryptUser = verify(token);
 
-      if (!decryptUser) {
-        return res.status(400).json({
-          statusCode: 400,
-          status_message: 'user_not_find',
-        });
-      }
-
-      const user = await User.findOne({ id: decryptUser.id });
+      const user = await UserQuery.findUserById(decryptUser.id);
 
       if (!user) {
         return res.status(400).json({
@@ -154,39 +132,12 @@ module.exports = {
         });
       }
 
-      if (user.email === email) {
-        return res.status(400).json({
-          statusCode: 400,
-          status_message: 'email_address_already_registered',
-        });
-      }
+      const _user = new modelUser(user.username, user.email, user.password);
 
-      const checkIfEmailIsUse = await User.findOne({
-        email,
-      });
+      const update_message = await _user.updateEmail(email);
 
-      if (checkIfEmailIsUse) {
-        return res.status(400).json({
-          statusCode: 400,
-          statusMessage: 'email_already_in_use',
-
-        });
-      }
-
-      if (!validator.isEmail(email)) {
-        return res.status(400).json({
-          statusCode: 400,
-          statusMessage: 'email_not_supported',
-
-        });
-      }
-
-      await User.findOneAndUpdate({ email: user.email }, {
-        email,
-      });
-
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(201).json({
+        statusCode: update_message.status_code,
         statusMessage: 'user_update_successfully',
         old_email: user.email,
         data: {
@@ -196,8 +147,16 @@ module.exports = {
 
       });
     } catch (e) {
-      res.status(400).json({
-        statusCode: 400,
+      if (e instanceof InvalidArgumentError) {
+        return res.status(403).json({
+          statusCode: 403,
+          statusMessage: 'internal_error',
+          data: e.message,
+        });
+      }
+
+      res.status(500).json({
+        statusCode: 500,
         statusMessage: 'internal_error',
         data: e,
       });
@@ -219,12 +178,6 @@ module.exports = {
 
       const [, token] = authorization.split(' ');
       const decryptUser = verify(token);
-
-      if (!decryptUser) {
-        return res.status(500).json({
-          message: 'Internal_Error',
-        });
-      }
 
       const userFind = await UserQuery.findUserById(decryptUser.id);
 
