@@ -42,4 +42,14 @@ module.exports = {
     }
   },
 
+  async updateFieldUsername(id, newValue) {
+    try {
+      await User.findByIdAndUpdate(id, {
+        username: newValue,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  },
+
 };

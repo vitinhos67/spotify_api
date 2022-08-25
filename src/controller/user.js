@@ -1,5 +1,3 @@
-// const bcryptjs = require('bcryptjs');
-
 const { verify } = require('../../functions/jwt');
 
 const User = require('../database/schemas/User');
@@ -54,14 +52,6 @@ module.exports = {
         });
       }
 
-      if (!username) {
-        return res.status(400).json({
-          status: 400,
-          statusMessage: 'undefined_username',
-
-        });
-      }
-
       const [, token] = authorization.split(' ');
 
       const decryptUser = verify(token);
@@ -75,16 +65,9 @@ module.exports = {
         });
       }
 
-      if (user.username === username) {
-        return res.status(400).json({
-          statusCode: 400,
-          status_message: 'username_already_in_use',
-        });
-      }
+      const user_model = new modelUser(user.username, user.email);
 
-      await User.findOneAndUpdate({ email: user.email }, {
-        username,
-      });
+      await user_model.updateUsername(user, username);
 
       return res.status(200).json({
         statusCode: 200,
@@ -97,11 +80,13 @@ module.exports = {
 
       });
     } catch (e) {
-      res.status(400).json({
-        statusCode: 400,
-        statusMessage: 'internal_error',
-        data: e,
-      });
+      if (e instanceof InvalidArgumentError) {
+        res.status(401).json({
+          statusCode: 401,
+          statusMessage: 'internal_error',
+          data: e.message,
+        });
+      }
     }
   },
 

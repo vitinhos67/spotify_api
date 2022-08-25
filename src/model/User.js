@@ -118,6 +118,18 @@ class User {
       status_code: 201,
     };
   }
+
+  async updateUsername({ id }, username) {
+    if (typeof username !== 'string') {
+      throw new InvalidArgumentError('Insert valid value.');
+    }
+
+    if (!username || username === this._username) {
+      throw new InvalidArgumentError('name undefined or invalid name');
+    }
+
+    return userQuery.updateFieldUsername(id, username);
+  }
 }
 
 module.exports = User;
