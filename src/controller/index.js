@@ -1,10 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-const dotenv = require('dotenv').config({
-  path: '../../.env',
-});
-
 const axios = require('axios');
-
 const Spotify = require('node-spotify-api');
 
 const credentials = require('../config/credentials');
@@ -75,11 +69,36 @@ module.exports = {
       });
     }
 
-    spotify.request(`https://api.spotify.com/v1/search?q=${q}&type=track`)
-      .then((data) => res.json(data))
-      .catch((err) => {
-        console.error(`Error occurred: ${err}`);
-      });
+    const response = await spotify.request(`https://api.spotify.com/v1/search?q=${q}&type=track`);
+
+    res.status(200).json({
+      data: response,
+    });
   },
 
+  async playlistTestCreate(req, res) {
+    try {
+      const { artist } = req.params;
+
+      if (!artist) {
+        return res.status(403).json({
+          message: 'artist not defined',
+        });
+      }
+
+      const request_artist = await spotify.request(`${endpoint}/v1/artists/${artist}`);
+
+      const query = new URLSearchParams({
+        seed_genres: request_artist.genres.join(',').replace(/\s/g, ''),
+      });
+
+      const search_request = await spotify.request(`${endpoint}/v1/recommendations?${query}`);
+
+      res.status(200).json({ search_request });
+    } catch (e) {
+      if (e) {
+        res.status(400).json({ e: e.message });
+      }
+    }
+  },
 };

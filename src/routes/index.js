@@ -22,6 +22,7 @@ routes.get('/callback', token_procedure.tokenStore);
 // ROUTE RELATIONAL WITH API SPOTIFY
 routes.get('/', index.findTrack);
 routes.get('/search', index.createPlaylist);
+routes.get('/create_playlist/:artist', index.playlistTestCreate);
 
 // ROUTE FOR CREATE TOKEN JWT
 routes.post('/auth/token', token_jwt.store);
