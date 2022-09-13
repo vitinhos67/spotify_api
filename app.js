@@ -14,7 +14,7 @@ const routes = require('./src/routes');
 (async () => {
   /** database  */
 
-  require('./src/database');
+  require('./src/database/connection/index');
 
   /** database * */
   app.use(cors({ origin: '*' }));

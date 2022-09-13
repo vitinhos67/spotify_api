@@ -18,6 +18,12 @@ const schemaUser = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  tracks_liked: {
+    type: Array,
+    default: [],
+  },
+
 });
 
 module.exports = mongoose.model('users', schemaUser);

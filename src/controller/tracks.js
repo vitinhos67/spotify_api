@@ -1,7 +1,6 @@
 const axios = require('axios');
 const Spotify = require('node-spotify-api');
 
-const jwt = require('../../functions/jwt');
 const credentials = require('../config/credentials');
 
 const { spotifyURL, spotifyKeys } = credentials;
@@ -12,9 +11,10 @@ const spotify = new Spotify({
   secret: spotifyKeys.client_secret,
 });
 
-const TracksQuery = require('../database/TracksQuery');
-const UserQuery = require('../database/UserQuery');
+const TracksQuery = require('../database/query/TracksQuery');
+
 const { InvalidArgumentError } = require('../model/errors');
+const basics_to_request_tracks = require('../../functions/basics-to-request-track');
 
 module.exports = {
 
@@ -105,44 +105,67 @@ module.exports = {
     }
   },
 
-  async testRoute(req, res) {
+  async addSongsInTracksLiked(req, res) {
     try {
-      const { authorization } = req.headers;
-      const { id_track } = req.query;
-      const [, token] = authorization.split(' ');
+      const values = await basics_to_request_tracks.basics(req);
 
-      if (!token) {
-        throw new InvalidArgumentError('Token not provided');
-      }
-      const payload = jwt.verify(token);
-
-      const user = await UserQuery.findUserById(payload.id);
-
-      if (!user) {
-        throw new InvalidArgumentError('User not find.');
-      }
-      const find_track = await spotify.request(`${endpoint}/v1/tracks/${id_track}`);
+      const find_track = await spotify.request(`${endpoint}/v1/tracks/${values.track_id}`);
 
       if (!find_track) {
         throw new InvalidArgumentError('track not find');
       }
 
       const track = await TracksQuery.addTrackInList({
-        id_user: user.id,
-        track_id: id_track,
-      }, res);
+        id: values.user.id,
+        track_id: values.track_id,
+      });
+
+      if (!track) {
+        throw new InvalidArgumentError('Track dont add');
+      }
 
       return res.status(200).json(track);
     } catch (e) {
-      if (e.statusCode === 404) {
-        return res.status(404).json({
-          e: 'track not find',
-        });
+      if (e instanceof InvalidArgumentError) {
+        res.status(403).json(e);
       }
 
       return res.status(500).json({
         e: e.message,
       });
+    }
+  },
+
+  async removeTrack(req, res) {
+    try {
+      const values = await basics_to_request_tracks.basics(req);
+
+      const find_track = await spotify.request(`${endpoint}/v1/tracks/${values.track_id}`);
+
+      if (!find_track) {
+        throw new InvalidArgumentError('track not find');
+      }
+
+      const removedTrack = await TracksQuery.removeTrackInList({
+        id_user: values.user.id,
+        track_id: values.track_id,
+      });
+      console.log(removedTrack);
+
+      if (!removedTrack) {
+        throw new InvalidArgumentError("Track don't removed");
+      }
+
+      res.status(201).json({
+        message: 'track removed successfully',
+      });
+    } catch (e) {
+      if (e instanceof InvalidArgumentError) {
+        return res.status(403).json({
+          error_message: e.message,
+          e,
+        });
+      }
     }
   },
 };

@@ -2,7 +2,7 @@ const express = require('express');
 
 const routes = express.Router();
 
-const index = require('../controller/index');
+const index = require('../controller/tracks');
 const token_procedure = require('../controller/token-spotify');
 const token_jwt = require('../controller/jwt-token');
 const user = require('../controller/user');
@@ -25,7 +25,8 @@ routes.get('/search', index.createPlaylist);
 routes.get('/create_playlist/:artist', index.playlistTestCreate);
 
 // ROUTE ACTION USER
-routes.post('/liked-track', index.testRoute);
+routes.post('/liked-track', index.addSongsInTracksLiked);
+routes.delete('/liked-track', index.removeTrack);
 
 // ROUTE FOR CREATE TOKEN JWT
 routes.post('/auth/token', token_jwt.store);
