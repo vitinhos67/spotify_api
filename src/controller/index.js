@@ -86,13 +86,11 @@ module.exports = {
         });
       }
 
-      const request_artist = await spotify.request(`${endpoint}/v1/artists/${artist}`);
+      const { genres } = await spotify.request(`${endpoint}/v1/artists/${artist}`);
 
-      const query = new URLSearchParams({
-        seed_genres: request_artist.genres.join(',').replace(/\s/g, ''),
-      });
+      // const search_request = await spotify.request(`${endpoint}/v1/recommendations?${query}`);
 
-      const search_request = await spotify.request(`${endpoint}/v1/recommendations?${query}`);
+      const search_request = await spotify.request(`${endpoint}/v1/search?q=${genres.join(',').replace(/\s/g, '+')}&type=track`);
 
       res.status(200).json({ search_request });
     } catch (e) {
