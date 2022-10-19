@@ -1,6 +1,6 @@
 const spotifyKeys = {
-  client_id: process.env.CLIENT_ID,
-  client_secret: process.env.CLIENT_SECRET,
+  client_id: process.env.client_id,
+  client_secret: process.env.client_secret,
 
 };
 const spotifyURL = {
@@ -9,9 +9,9 @@ const spotifyURL = {
 };
 
 const configs = {
-  sess: process.env.SECRET,
-  mongodb_uri: process.env.MONGODB_URI,
-  json_web_secret: process.env.JSON_WEB_SECRET,
+  sess: process.env.sess,
+  mongodb_uri: process.env.mongodb_uri,
+  json_web_secret: process.env.json_web_secret,
 };
 
 module.exports = { spotifyKeys, spotifyURL, configs };
