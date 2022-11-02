@@ -21,7 +21,6 @@ client_secret =
 sess = 
 mongodb_uri = 
 json_web_secret =  
-password = 
 ```
 
 
