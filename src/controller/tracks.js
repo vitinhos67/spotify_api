@@ -1,5 +1,4 @@
 const Spotify = require('node-spotify-api');
-
 const credentials = require('../config/credentials');
 
 const { spotifyURL, spotifyKeys } = credentials;
@@ -12,10 +11,15 @@ const spotify = new Spotify({
 
 const TracksQuery = require('../database/query/TracksQuery');
 const Tracks = require('../model/Tracks');
+
 const {
-  InvalidArgumentError, ValueAlreadyExists, InternalServerError, ValueNotFound,
+  InvalidArgumentError,
+  ValueAlreadyExists,
+  InternalServerError,
+  ValueNotFound,
 } = require('../model/errors');
-const basics_to_request_tracks = require('../../functions/basics-to-request-track');
+
+/* const basics_to_request_tracks = require('../../functions/basics-to-request-track'); */
 
 module.exports = {
 
@@ -89,19 +93,17 @@ module.exports = {
 
   async addSongsInTracksLiked(req, res) {
     try {
-      const values = await basics_to_request_tracks.basics(req);
+      const { user, track_id } = req;
 
-      // const find_track = await spotify.request(`${endpoint}/v1/tracks/${values.track_id}`);
-
-      const verify = await Tracks.verify(values.user.id, values.track_id);
+      const verify = await Tracks.verify(user.id, track_id);
 
       if (verify) {
         throw new ValueAlreadyExists('Values already Exists');
       }
 
       const track = await TracksQuery.addTrackInList({
-        id: values.user.id,
-        track_id: values.track_id,
+        id: user.id,
+        track_id,
       });
 
       if (!track) {
@@ -141,17 +143,17 @@ module.exports = {
 
   async removeTrack(req, res) {
     try {
-      const values = await basics_to_request_tracks.basics(req);
+      const { user, track_id } = req;
 
-      const find_track = await spotify.request(`${endpoint}/v1/tracks/${values.track_id}`);
+      const find_track = await spotify.request(`${endpoint}/v1/tracks/${track_id}`);
 
       if (!find_track) {
         throw new InvalidArgumentError('track not find');
       }
 
       const removedTrack = await TracksQuery.removeTrackInList({
-        id: values.user.id,
-        track_id: values.track_id,
+        id: user.id,
+        track_id,
       });
 
       if (!removedTrack) {

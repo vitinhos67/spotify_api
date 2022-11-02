@@ -1,12 +1,19 @@
-const { InvalidArgumentError } = require('../src/model/errors');
+const { InvalidArgumentError } = require('../model/errors');
 
-const UserQuery = require('../src/database/query/UserQuery');
-const jwt = require('./jwt');
+const UserQuery = require('../database/query/UserQuery');
+const jwt = require('../../functions/jwt');
 
 module.exports = {
 
-  async basics(req) {
+  async basics(req, res, next) {
     const { authorization } = req.headers;
+
+    if (!authorization) {
+      return res.status(401).json({
+        message: 'not_authorized',
+      });
+    }
+
     const { track_id } = req.query;
 
     const [, token] = authorization.split(' ');
@@ -22,10 +29,10 @@ module.exports = {
       throw new InvalidArgumentError('User not find.');
     }
 
-    return {
-      user,
-      track_id,
-    };
+    req.user = user;
+    req.track_id = track_id;
+
+    next();
   },
 
 };

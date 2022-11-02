@@ -31,7 +31,7 @@ module.exports = {
     try {
       const users = await User.find();
 
-      return res.status(200).json({
+      return res.status(201).json({
         users,
       });
     } catch (e) {

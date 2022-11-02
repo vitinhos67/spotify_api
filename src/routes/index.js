@@ -6,6 +6,7 @@ const index = require('../controller/tracks');
 const token_procedure = require('../controller/token-spotify');
 const token_jwt = require('../controller/jwt-token');
 const user = require('../controller/user');
+const authorization = require('../middleware/request_tracks_auth');
 
 // ROUTE FOR CREATE/DELETE/UPTADE/READ USER
 routes.post('/user', user.store);
@@ -25,8 +26,8 @@ routes.get('/search', index.createPlaylist);
 routes.get('/create_playlist/:artist', index.playlistTestCreate);
 
 // ROUTE ACTION USER
-routes.post('/liked-track', index.addSongsInTracksLiked);
-routes.delete('/liked-track', index.removeTrack);
+routes.post('/liked-track', authorization.basics, index.addSongsInTracksLiked);
+routes.delete('/liked-track', authorization.basics, index.removeTrack);
 
 // ROUTE FOR CREATE TOKEN JWT
 routes.post('/auth/token', token_jwt.store);
