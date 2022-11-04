@@ -1,14 +1,9 @@
-const Spotify = require('node-spotify-api');
 const credentials = require('../config/credentials');
 
-const { spotifyURL, spotifyKeys } = credentials;
+const { spotifyURL } = credentials;
 const { endpoint } = spotifyURL;
 
-const spotify = new Spotify({
-  id: spotifyKeys.client_id,
-  secret: spotifyKeys.client_secret,
-});
-
+const spotify = require('../../functions/spotify-connetion');
 const TracksQuery = require('../database/query/TracksQuery');
 const Tracks = require('../model/Tracks');
 
@@ -18,8 +13,6 @@ const {
   InternalServerError,
   ValueNotFound,
 } = require('../model/errors');
-
-/* const basics_to_request_tracks = require('../../functions/basics-to-request-track'); */
 
 module.exports = {
 
@@ -98,7 +91,7 @@ module.exports = {
       const verify = await Tracks.verify(user.id, track_id);
 
       if (verify) {
-        throw new ValueAlreadyExists('Values already Exists');
+        throw new ValueAlreadyExists('Track already added');
       }
 
       const track = await TracksQuery.addTrackInList({

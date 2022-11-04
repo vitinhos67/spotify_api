@@ -1,4 +1,8 @@
 const tracksQuery = require('../database/query/TracksQuery');
+const { spotifyURL } = require('../config/credentials');
+const spotify = require('../../functions/spotify-connetion');
+
+const { endpoint } = spotifyURL;
 
 class Tracks {
   constructor(track) {
@@ -10,10 +14,12 @@ class Tracks {
 * @param {string} user
 * @param {string} track
 *
-* Check if track exists in your profile;
+* Check if track exists in your profile and spotify;
 */
   static async verify(id, track) {
     try {
+      await spotify.request(`${endpoint}/v1/tracks/${track}`);
+
       const trackExists = await tracksQuery.findTrack(id, track);
       if (trackExists) {
         return Boolean(1);
@@ -21,7 +27,15 @@ class Tracks {
 
       return Boolean(0);
     } catch (e) {
-      console.log(e.message);
+      if (e.statusCode >= 400 && e.statusCode <= 499) {
+        console.log(e.message);
+
+        throw new Error('ID INVALID OR TRACK INEXIST');
+      }
+
+      if (e) {
+        throw new Error(e);
+      }
     }
   }
 }
