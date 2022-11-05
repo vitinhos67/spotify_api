@@ -2,6 +2,7 @@ const credentials = require('../config/credentials');
 
 const { spotifyURL } = credentials;
 const { endpoint } = spotifyURL;
+const ident_track = require('../../functions/ident-track');
 
 const spotify = require('../../functions/spotify-connetion');
 const TracksQuery = require('../database/query/TracksQuery');
@@ -54,9 +55,11 @@ module.exports = {
         });
       }
 
-      const response = await spotify.request(`${endpoint}/v1/recommendations?seed_artists=${artist}`);
+      const response = await spotify.request(`${endpoint}/v1/recommendations?seed_artists=${artist}&limit=1`);
 
-      res.status(200).json({ response });
+      const ident = ident_track(response.tracks);
+
+      res.status(200).json(ident);
     } catch (e) {
       if (e) {
         res.status(400).json({ e: e.message });

@@ -36,9 +36,7 @@ Após se conectar, você tera acessos as rotas da API.
 
 # Rotas
 
-
-
-<h2>User</h2>
+### User
 
 <br>
 
@@ -47,10 +45,8 @@ localhost:port/user
 ```
 A rotas de usuarios podem ser usado passando o mesmo parametro, basta escolher qual tipo de requisição HTTP será utilizada, entre ela temos POST,GET até o momento.
 <br><br>
-<h3>POST<h3>
-
-<p>utilizada para criar um usuario. </p>
-
+<h4>- POST<h4>
+<p>Utilizada para criar um usuario. </p>
 
 ```
 body: {
@@ -73,9 +69,7 @@ Response 201: {
 	}
 }
 ```
-
-GET
-
+<h4>- GET<h4>
 <p>Utilizada para retornar todos os usuario.
 Não e necessario passar dados neste GET.
   </p>
@@ -98,9 +92,9 @@ Response 200: {
 ```
 <br></br>
 
-<h2>Tracks</h2>
+### Tracks
 
-certifique-se de emitir um token antes de tentar acessar as rotas para alterar dados de Users.
+Certifique-se de emitir um token antes de tentar acessar as rotas para alterar dados de Users.
 
 Encontrar uma track:
 ```
@@ -147,11 +141,7 @@ METHOD: POST
 Header: {
   Authorization: `Bearer toker_account`
 }
-
-
-
 URI: localhost:port/liked-track?track_id=id_song
-
 ```
 <br>
 
@@ -170,7 +160,7 @@ URI: localhost:port/liked-track?track_id=id_song
 ```
 
 
-<h2>Token</h2>
+### Token
 
 O token e necessario para realizar operações para um usuario, como deletar, adicionar, modificar. Para isso utilizamos
 
