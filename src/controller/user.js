@@ -2,8 +2,8 @@ const { verify } = require('../../functions/jwt');
 
 const User = require('../database/schemas/User');
 const modelUser = require('../model/User');
-const { InvalidArgumentError } = require('../model/errors');
 const UserQuery = require('../database/query/UserQuery');
+const { InvalidArgumentError } = require('../model/errors');
 
 module.exports = {
   async store(req, res) {

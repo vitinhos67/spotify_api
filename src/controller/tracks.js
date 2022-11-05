@@ -44,25 +44,9 @@ module.exports = {
     }
   },
 
-  async createPlaylist(req, res) {
-    const { q } = req.query;
-
-    if (!q) {
-      return res.status(401).json({
-        data: 'not_query',
-      });
-    }
-
-    const response = await spotify.request(`https://api.spotify.com/v1/search?q=${q}&type=track`);
-
-    res.status(200).json({
-      data: response,
-    });
-  },
-
-  async playlistTestCreate(req, res) {
+  async playlistCreate(req, res) {
     try {
-      const { artist } = req.params;
+      const { artist } = req.query;
 
       if (!artist) {
         return res.status(403).json({
@@ -70,13 +54,9 @@ module.exports = {
         });
       }
 
-      const { genres } = await spotify.request(`${endpoint}/v1/artists/${artist}`);
+      const response = await spotify.request(`${endpoint}/v1/recommendations?seed_artists=${artist}`);
 
-      // const search_request = await spotify.request(`${endpoint}/v1/recommendations?${query}`);
-
-      const search_request = await spotify.request(`${endpoint}/v1/search?q=${genres.join(',').replace(/\s/g, '+')}&type=track`);
-
-      res.status(200).json({ search_request });
+      res.status(200).json({ response });
     } catch (e) {
       if (e) {
         res.status(400).json({ e: e.message });

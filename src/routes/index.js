@@ -22,8 +22,7 @@ routes.get('/callback', token_procedure.tokenStore);
 
 // ROUTE RELATIONAL WITH API SPOTIFY
 routes.get('/', index.findTrack);
-routes.get('/search', index.createPlaylist);
-routes.get('/create_playlist/:artist', index.playlistTestCreate);
+routes.get('/create_playlist', index.playlistCreate);
 
 // ROUTE ACTION USER
 routes.post('/liked-track', authorization.basics, index.addSongsInTracksLiked);

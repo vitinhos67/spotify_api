@@ -21,6 +21,7 @@ class Tracks {
       await spotify.request(`${endpoint}/v1/tracks/${track}`);
 
       const trackExists = await tracksQuery.findTrack(id, track);
+
       if (trackExists) {
         return Boolean(1);
       }
