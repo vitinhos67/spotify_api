@@ -3,10 +3,11 @@ const express = require('express');
 const routes = express.Router();
 
 const index = require('../controller/tracks');
+const playlist = require('../controller/playlist');
 const token_procedure = require('../controller/token-spotify');
 const token_jwt = require('../controller/jwt-token');
 const user = require('../controller/user');
-const authorization = require('../middleware/request_tracks_auth');
+const authorization = require('../middleware/Authentication');
 
 // ROUTE FOR CREATE/DELETE/UPTADE/READ USER
 routes.post('/user', user.store);
@@ -20,11 +21,12 @@ routes.post('/user/update/password', user.updatePassword);
 routes.get('/token', token_procedure.redirectToAuthorizedURI);
 routes.get('/callback', token_procedure.tokenStore);
 
-// ROUTE RELATIONAL WITH API SPOTIFY
-routes.get('/', index.findTrack);
-routes.get('/create_playlist', index.playlistCreate);
+// ROUTE RELATIONAL WITH PLAYLIST
+routes.get('/generate', authorization.basics, playlist.generateRandom);
+routes.get('/create', authorization.basics, playlist.store);
 
-// ROUTE ACTION USER
+// ROUTE ACTION USER AND TRACKS
+routes.get('/', index.findTrack);
 routes.post('/liked-track', authorization.basics, index.addSongsInTracksLiked);
 routes.delete('/liked-track', authorization.basics, index.removeTrack);
 

@@ -6,8 +6,6 @@
 const func = (tracks) => {
   const data = [];
   tracks.forEach((value) => {
-    console.log(value.album);
-
     data.push({
       album: {
         external_urls: value.album.external_urls,
@@ -21,7 +19,7 @@ const func = (tracks) => {
       artists: value.artists,
       external_ids: value.external_ids,
       external_urls: value.external_urls,
-      id_song: value.id,
+      id_track: value.id,
       name: value.name,
       preview_url: value.preview_url,
     });

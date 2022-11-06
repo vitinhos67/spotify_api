@@ -14,8 +14,6 @@ module.exports = {
       });
     }
 
-    const { track_id } = req.query;
-
     const [, token] = authorization.split(' ');
 
     if (!token) {
@@ -30,7 +28,6 @@ module.exports = {
     }
 
     req.user = user;
-    req.track_id = track_id;
 
     next();
   },

@@ -45,7 +45,7 @@ module.exports = {
     }
   },
 
-  async playlistCreate(req, res) {
+  async generateRandomPlaylist(req, res) {
     try {
       const { artist } = req.query;
 
@@ -66,10 +66,11 @@ module.exports = {
       }
     }
   },
-
   async addSongsInTracksLiked(req, res) {
     try {
-      const { user, track_id } = req;
+      const { user } = req;
+
+      const { track_id } = req.query;
 
       const verify = await Tracks.verify(user.id, track_id);
 
@@ -119,7 +120,8 @@ module.exports = {
 
   async removeTrack(req, res) {
     try {
-      const { user, track_id } = req;
+      const { user } = req;
+      const { track_id } = req.query;
 
       const find_track = await spotify.request(`${endpoint}/v1/tracks/${track_id}`);
 
