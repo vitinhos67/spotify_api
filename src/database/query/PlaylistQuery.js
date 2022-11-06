@@ -20,4 +20,24 @@ module.exports = {
       }
     }
   },
+
+  async playlistAlreadyExists({ author_id, name }) {
+    try {
+      const playlist = await Playlist.find({
+        $where: {
+          author_id,
+          name,
+        },
+      });
+
+      if (!playlist) {
+        return Boolean(0);
+      }
+
+      return Boolean(1);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
 };

@@ -56,40 +56,11 @@ body: {
 }
 ```
 
-```
-Response 201: {
-	"userCreate": {
-		"username": "victor",
-		"email": "email@email.com",
-		"password": "hash_password",
-		"tracks_liked": [],
-		"_id": "54553tgrg4g2l4785das",
-		"created_at": "2022-11-02T13:25:53.658Z",
-		"__v": 0
-	}
-}
-```
 <h4>- GET<h4>
 <p>Utilizada para retornar todos os usuario.
 Não e necessario passar dados neste GET.
   </p>
 
-  ```
-Response 200: {
-	"users": [
-		{
-			"_id": "635049ba8210cbe7b4116268",
-			"username": "ola23",
-			"email": "olmundo@email.com",
-			"password": "$2a$10$lKZ3RnECdLpX9pLn0TxgjuTHOsWb.tdSEp8cSLCAaHuj6BwwFBSoy",
-			"tracks_liked": [
-				"48vDIufGC8ujPuBiTxY8dm"
-			],
-			"created_at": "2022-10-19T19:02:18.020Z",
-			"__v": 0
-		},
-		
-```
 <br></br>
 
 ### Tracks
@@ -102,34 +73,6 @@ METHOD: GET
 q: track_name
 
 localhost:port?q=Heaven+Up+There
-```
-
-```
-Response 200: "href": "https://api.spotify.com/v1/search?query=Heaven+Up+There&type=track&offset=0&limit=10",
-			"items": [
-				{
-					"album": {
-						"album_type": "album",
-						"artists": [
-						],
-						"available_markets": [
-
-						],
-						"external_urls": {
-						},
-						"href": "https://api.spotify.com/v1/albums/2gnr57XaEBXSDlfbkowBP8",
-						"id": "2gnr57XaEBXSDlfbkowBP8",
-						"images": [
-
-						],
-						"name": "Life After",
-						"release_date": "2019-07-12",
-						"release_date_precision": "day",
-						"total_tracks": 11,
-						"type": "album",
-						"uri": "spotify:album:2gnr57XaEBXSDlfbkowBP8"
-					}
-
 ```
 <br>
 
@@ -173,12 +116,18 @@ BODY: {
 }
 URI:localhost:port/auth/token
 ```
+<br></br>
+### Playlists
+
+Create playlist:
 ```
-Response 200: {
-	"statusCode": 200,
-	"statusMessage": "success",
-	"data": {
-		"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjI2ZmUxZTM0NDljYmU5ZTJlYWNmZCIsImlhdCI6MTY2NzM5NTY4MywiZXhwIjoxNjY4MDAwNDgzfQ.XgG_b9IHkD7kxQidBo2My3YlaftIp8M3IKWdAsUQIWY"
-	}
+Authorization code: "Bearer token"
+
+localhost:port/create
+body: {
+  name: name_playlist
 }
+
 ```
+
+
