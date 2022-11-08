@@ -71,25 +71,3 @@ module.exports = {
   },
 
 };
-
-/* const response = await spotify.request(`${endpoint}/v1/tracks/${id_track}`);
-
-      const ident = ident_track(response.tracks);
-
-      console.log(ident);
-      if (!response) {
-        throw new InvalidArgumentError('Invalid id_track');
-      }
-
-      const obj = {
-        name,
-        author: user.username,
-        author_id: user.id,
-        tracks: {
-          name: ident.name,
-          artists: ident.artists,
-          id_track: ident.id_track,
-          preview_url: ident.preview_url,
-          external_urls: ident.external_urls,
-        },
-      }; */
