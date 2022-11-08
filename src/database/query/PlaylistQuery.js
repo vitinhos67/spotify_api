@@ -16,27 +16,44 @@ module.exports = {
       return playlist;
     } catch (e) {
       if (e) {
-        console.log(e.message);
+        return e;
       }
     }
   },
 
-  async playlistAlreadyExists({ author_id, name }) {
+  async findPlaylist({ author_id, name }) {
     try {
-      const playlist = await Playlist.find({
-        $where: {
-          author_id,
-          name,
-        },
+      const playlist = await Playlist.findOne({
+        author_id,
+        name,
       });
 
       if (!playlist) {
         return Boolean(0);
       }
 
-      return Boolean(1);
-    } catch (error) {
-      console.log(error);
+      return playlist;
+    } catch (e) {
+      if (e) {
+        return e;
+      }
+    }
+  },
+  async addTrack({ name, id }, tracks) {
+    try {
+      const add = await Playlist.updateOne(
+        {
+          name,
+          id,
+        },
+        { $push: { tracks } },
+      );
+
+      return add;
+    } catch (e) {
+      if (e) {
+        return e;
+      }
     }
   },
 

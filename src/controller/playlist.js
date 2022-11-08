@@ -69,5 +69,51 @@ module.exports = {
       }
     }
   },
+  async addTrack(req, res) {
+    try {
+      const { user } = req;
+      const { track_id, name } = req.body;
+      if (!track_id || !name) {
+        throw new InvalidArgumentError('body not valid');
+      }
 
+      const response = await spotify.request(`${endpoint}/v1/tracks/${track_id}`);
+      const ident = ident_track([response]);
+
+      const author_id = user.id;
+      const tracks = {
+        id: ident[0].id_track,
+        name: ident[0].name,
+        artists: ident[0].artists[0].name,
+        preview_url: ident[0].preview_url,
+      };
+
+      const add = await Playlist.addSong(name, author_id, tracks);
+
+      res.status(200).json(add);
+    } catch (error) {
+      if (error.statusCode === 400 || error.statusCode === 404) {
+        return res.status(401).json({
+          error: error.message,
+          statusCode: error.statusCode,
+        });
+      }
+
+      if (error instanceof InvalidArgumentError) {
+        return res.status(401).json({
+          error: error.message,
+          body: ['name', 'track_id'],
+        });
+      }
+
+      if (error) {
+        console.log(error);
+
+        return res.status(500).json({
+          error,
+          error_message: error.message,
+        });
+      }
+    }
+  },
 };

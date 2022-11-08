@@ -1,4 +1,5 @@
 const playlistQuery = require('../database/query/PlaylistQuery');
+const { InvalidArgumentError } = require('./errors');
 
 class Playlist {
   constructor({
@@ -22,6 +23,29 @@ class Playlist {
       return playlist;
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  static async addSong(name, author_id, tracks) {
+    try {
+      const playlist = await playlistQuery.findPlaylist({
+        name,
+        author_id,
+      });
+
+      if (!playlist) {
+        throw new InvalidArgumentError('Playlist nao encontrada');
+      }
+
+      const addTrack = await playlistQuery.addTrack({
+        name: playlist.name,
+        id: playlist.id,
+      }, tracks);
+
+      return addTrack;
+    } catch (e) {
+      return e;
     }
   }
 }

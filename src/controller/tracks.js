@@ -3,7 +3,6 @@ const credentials = require('../config/credentials');
 const { spotifyURL } = credentials;
 const { endpoint } = spotifyURL;
 const ident_track = require('../../functions/ident-track');
-
 const spotify = require('../../functions/spotify-connetion');
 const TracksQuery = require('../database/query/TracksQuery');
 const Tracks = require('../model/Tracks');
@@ -34,36 +33,12 @@ module.exports = {
 
       const response = await spotify.request(`${endpoint}/v1/search?q=${q}&type=track&limit=10`);
 
-      return res.json({
-        response,
-
-      });
+      const ident = ident_track(response.tracks.items);
+      return res.json(ident);
     } catch (e) {
       return res.status(401).json({
         error: e.message,
       });
-    }
-  },
-
-  async generateRandomPlaylist(req, res) {
-    try {
-      const { artist } = req.query;
-
-      if (!artist) {
-        return res.status(403).json({
-          message: 'artist not defined',
-        });
-      }
-
-      const response = await spotify.request(`${endpoint}/v1/recommendations?seed_artists=${artist}&limit=1`);
-
-      const ident = ident_track(response.tracks);
-
-      res.status(200).json(ident);
-    } catch (e) {
-      if (e) {
-        res.status(400).json({ e: e.message });
-      }
     }
   },
   async addSongsInTracksLiked(req, res) {

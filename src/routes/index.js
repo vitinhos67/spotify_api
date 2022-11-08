@@ -24,6 +24,7 @@ routes.get('/callback', token_procedure.tokenStore);
 // ROUTE RELATIONAL WITH PLAYLIST
 routes.get('/generate', authorization.basics, playlist.generateRandom);
 routes.get('/create', authorization.basics, playlist.store);
+routes.get('/track/add', authorization.basics, playlist.addTrack);
 
 // ROUTE ACTION USER AND TRACKS
 routes.get('/', index.findTrack);
