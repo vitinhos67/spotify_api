@@ -22,7 +22,7 @@ class Playlist {
 
       return playlist;
     } catch (e) {
-      console.log(e);
+      return e;
     }
   }
 

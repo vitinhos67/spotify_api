@@ -31,8 +31,6 @@ module.exports = {
       console.log(e);
     }
   },
-
-  /// ///////////////////
   async tokenStore(req, res) {
     try {
       const code = req.query.code || null;

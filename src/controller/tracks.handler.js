@@ -3,7 +3,7 @@ const credentials = require('../config/credentials');
 const { spotifyURL } = credentials;
 const { endpoint } = spotifyURL;
 const ident_track = require('../../functions/ident-track');
-const spotify = require('../../functions/spotify-connetion');
+const spotify = require('../config/spotify/spotify-connetion');
 const TracksQuery = require('../database/query/TracksQuery');
 const Tracks = require('../model/Tracks');
 

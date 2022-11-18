@@ -2,11 +2,11 @@ const express = require('express');
 
 const routes = express.Router();
 
-const index = require('../controller/tracks');
-const playlist = require('../controller/playlist');
+const index = require('../controller/tracks.handler');
+const playlist = require('../controller/playlist.handler');
 const token_procedure = require('../controller/token-spotify');
-const token_jwt = require('../controller/jwt-token');
-const user = require('../controller/user');
+const token_jwt = require('../controller/jwt.handler');
+const user = require('../controller/user.handler');
 const authorization = require('../middleware/Authentication');
 
 // ROUTE FOR CREATE/DELETE/UPTADE/READ USER
