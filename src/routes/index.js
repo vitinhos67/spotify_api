@@ -22,9 +22,9 @@ routes.get('/token', token_procedure.redirectToAuthorizedURI);
 routes.get('/callback', token_procedure.tokenStore);
 
 // ROUTE RELATIONAL WITH PLAYLIST
-routes.get('/generate', authorization.basics, playlist.generateRandom);
-routes.get('/create', authorization.basics, playlist.store);
-routes.get('/add/track', authorization.basics, playlist.addTrack);
+routes.get('/playlist/generate', authorization.basics, playlist.generateRandom);
+routes.get('/playlist/create', authorization.basics, playlist.store);
+routes.get('/playlist/add/track', authorization.basics, playlist.addTrack);
 
 // ROUTE ACTION USER AND TRACKS
 routes.get('/', index.findTrack);

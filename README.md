@@ -15,12 +15,17 @@ A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e n
 <br>
 
 .env sintaxe: 
+
 ```
-client_id =
-client_secret = 
-sess = 
-mongodb_uri = 
-json_web_secret =  
+client_id
+client_secret
+sess
+mongodb_uri
+json_web_secret
+json_web_reflesh_token
+expiresIn_reflesh_token
+endpoint
+
 ```
 
 
@@ -35,7 +40,6 @@ mongodb+srv://<username>:<password>@cluster0.5deos.mongodb.net/database
 Após se conectar, você tera acessos as rotas da API.
 
 # Rotas
-
 ### User
 
 <br>
@@ -43,25 +47,26 @@ Após se conectar, você tera acessos as rotas da API.
 ```
 localhost:port/user
 ```
-A rotas de usuarios podem ser usado passando o mesmo parametro, basta escolher qual tipo de requisição HTTP será utilizada, entre ela temos POST,GET até o momento.
-<br><br>
+
+As rotas de usuarios podem ser usado passando o mesmo parametro, basta escolher qual tipo de requisição HTTP será utilizada, entre ela temos POST,GET até o momento.
+</br>
+
 <h4>- POST<h4>
 <p>Utilizada para criar um usuario. </p>
 
 ```
-body: {
-  "username":"",
-  "email":"",
-  "password":""
+body:
+ -username: <username>
+ -email: <email>
+ -password: <password>
 }
 ```
 
-<h4>- GET<h4>
+<h4> - GET<h4>
 <p>Utilizada para retornar todos os usuario.
-Não e necessario passar dados neste GET.
-  </p>
+Não e necessario passar dados neste GET.</p>
 
-<br></br>
+</br>
 
 ### Tracks
 
@@ -78,12 +83,11 @@ localhost:port?q=Heaven+Up+There
 
 Adicionar uma track a lista do usuario, necessario autenticar através do Bearer Token.
 
-
 ```
 METHOD: POST
-Header: {
-  Authorization: `Bearer toker_account`
-}
+Header: 
+ -Authorization: `Bearer <token>`
+
 URI: localhost:port/liked-track?track_id=id_song
 ```
 <br>
@@ -92,42 +96,50 @@ Deletar uma track da lista do usuario, necessario autenticar através do Bearer 
 
 ```
 METHOD: DELETE
-Header: {
-  Authorization: `Bearer toker_account`
-}
-
-
-
 URI: localhost:port/liked-track?track_id=id_song
 
+Header: 
+ - Authorization: Bearer <token>
 ```
 
 
 ### Token
 
-O token e necessario para realizar operações para um usuario, como deletar, adicionar, modificar. Para isso utilizamos
+O token e necessario para realizar operações para um usúario, como por exemplo deletar, adicionar, modificar. Para isso utilizamos
 
 ```
-METHOD: POST
-BODY: {
-  "username":"",
-  "email":"",
-  "password":""
-}
-URI:localhost:port/auth/token
+Method: POST
+URI: localhost:port/auth/token
+body: 
+ - username: <username>
+ - email: <email>
+ - password": <password>
+
 ```
 <br></br>
 ### Playlists
 
-Create playlist:
+Necessario se autenticar com um usúario através do Bearer token. </br>
+Criar uma playlist:
 ```
-Authorization code: "Bearer token"
+Authorization: Bearer <token>
 
-localhost:port/create
-body: {
-  name: name_playlist
-}
+localhost:port/playlist/create
+body: 
+ - name: <nome_playlist>
 
+```
+
+
+Adicionar uma musica a uma track:
+
+```
+Authorization: Bearer <token>
+method: POST
+body:
+ - name: <nome_playlist>
+ - track_id: <track_id> // Apenas id validos do spotify
+ - reflesh_token: <seu_reflesh_token>
 ```
 
 
