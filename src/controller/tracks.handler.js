@@ -10,38 +10,29 @@ const Tracks = require('../model/Tracks');
 const {
   InvalidArgumentError,
   ValueAlreadyExists,
-  InternalServerError,
-  ValueNotFound,
 } = require('../model/errors');
 
 module.exports = {
 
-  async findTrack(req, res) {
+  async findTrack(req, res, next) {
     try {
       const { searchTrack } = req.body;
       const { q } = req.query;
 
       if (!searchTrack && searchTrack == null) {
         if (!q) {
-          return res.status(400).json({
-            error: {
-              message: 'no_query',
-            },
-          });
+          throw new InvalidArgumentError('no_query');
         }
       }
-
       const response = await spotify.request(`${endpoint}/v1/search?q=${q}&type=track&limit=10`);
 
       const ident = ident_track(response.tracks.items);
       return res.json(ident);
     } catch (e) {
-      return res.status(401).json({
-        error: e.message,
-      });
+      next(e);
     }
   },
-  async addSongsInTracksLiked(req, res) {
+  async addSongsInTracksLiked(req, res, next) {
     try {
       const { user } = req;
 
@@ -64,36 +55,11 @@ module.exports = {
 
       return res.status(200).json(track);
     } catch (e) {
-      const objError = {
-        e,
-        error_message: e.message,
-      };
-
-      if (e instanceof InternalServerError) {
-        return res.status(400).json(objError);
-      }
-
-      if (e instanceof InvalidArgumentError) {
-        return res.status(403).json(objError);
-      }
-
-      if (e instanceof ValueAlreadyExists) {
-        return res.status(401).json({
-          message: e.message,
-        });
-      }
-      if (e instanceof ValueNotFound) {
-        return res.status(404).json({
-          message: e.message,
-        });
-      }
-      if (e) {
-        return res.status(500).json(objError);
-      }
+      next(e);
     }
   },
 
-  async removeTrack(req, res) {
+  async removeTrack(req, res, next) {
     try {
       const { user } = req;
       const { track_id } = req.query;
@@ -117,12 +83,7 @@ module.exports = {
         message: 'track removed successfully',
       });
     } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        return res.status(403).json({
-          error_message: e.message,
-          e,
-        });
-      }
+      next(e);
     }
   },
 };

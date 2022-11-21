@@ -1,7 +1,6 @@
 const express = require('express');
 
 const routes = express.Router();
-
 const index = require('../controller/tracks.handler');
 const playlist = require('../controller/playlist.handler');
 const token_procedure = require('../controller/token.spotify');

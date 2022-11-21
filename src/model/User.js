@@ -1,7 +1,7 @@
 const validator = require('validator');
 const bcryptjs = require('bcryptjs');
 const userQuery = require('../database/query/UserQuery');
-const { InvalidArgumentError } = require('./errors');
+const { InvalidArgumentError, ValueAlreadyExists } = require('./errors');
 
 class User {
   constructor(username, email, password) {
@@ -12,7 +12,6 @@ class User {
 
   _checkEmail() {
     if (!this._email) throw new InvalidArgumentError('Email not defined');
-
     return validator.isEmail(this._email);
   }
 
@@ -23,52 +22,44 @@ class User {
       throw new InvalidArgumentError('password not valid');
     }
 
+    if (typeof this._password !== 'string') throw new SyntaxError('The api does not accept data other than a string');
+
     const salt = bcryptjs.genSaltSync(10);
     const hash = bcryptjs.hashSync(this._password, salt);
-
     return hash;
   }
 
   async create() {
-    if (!this._username) throw new InvalidArgumentError('username not valid');
+    try {
+      if (!this._username) throw new InvalidArgumentError('username not valid');
 
-    if (!this._checkEmail()) {
-      throw new InvalidArgumentError('Email not valid');
+      if (!this._checkEmail()) {
+        throw new InvalidArgumentError('Email not valid');
+      }
+
+      const password = this._checkPasswordAndHash();
+
+      const UserAlreadyExist = await userQuery.findUserByEmail(this._email);
+
+      if (UserAlreadyExist) {
+        throw new ValueAlreadyExists('User Already Exist.');
+      }
+
+      const user = await userQuery.createUser({
+        username: this._username,
+        email: this._email,
+        password,
+      });
+
+      return user;
+    } catch (e) {
+      return e;
     }
-
-    const password = this._checkPasswordAndHash();
-
-    const UserAlreadyExist = await userQuery.findUserByEmail(this.email);
-
-    if (UserAlreadyExist) {
-      throw new InvalidArgumentError('User Already Exist.');
-    }
-
-    const user = await userQuery.createUser({
-      username: this._username,
-      email: this._email,
-      password,
-    });
-
-    return user;
   }
 
   async updatePassword(id, { password, new_password, confirm_password }) {
     if (!this._password || !new_password || !confirm_password) {
-      throw new InvalidArgumentError({
-        status: 400,
-        statusMessage: 'values_undefined',
-        prop: [
-          'password',
-          'new_password',
-          'confirm_password',
-        ],
-        body: {
-          password,
-          new_password,
-          confirm_password,
-        },
-      });
+      throw new InvalidArgumentError('Check Values. Necessity password, new_password, confirm_password');
     }
 
     const decryptPassword = await bcryptjs.compare(password, this._password);
@@ -99,7 +90,7 @@ class User {
     const email_in_use = await userQuery.findUserByEmail(email);
 
     if (email_in_use) {
-      throw new Error('Email sendo Usado');
+      throw new InvalidArgumentError('Email already in use');
     }
 
     if (!validator.isEmail(email)) {
@@ -115,7 +106,7 @@ class User {
     await userQuery.updateFieldEmail(user.id, email);
 
     return {
-      status_code: 201,
+      status_code: 204,
     };
   }
 

@@ -46,12 +46,7 @@ module.exports = {
       req.user = user;
       next();
     } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        return res.status(403).json({
-          message: e.message,
-          statusCode: 403,
-        });
-      }
+      next(e);
     }
   },
 

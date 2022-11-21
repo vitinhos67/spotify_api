@@ -6,24 +6,20 @@ const UserQuery = require('../database/query/UserQuery');
 const { InvalidArgumentError } = require('../model/errors');
 
 module.exports = {
-  async store(req, res) {
+  async store(req, res, next) {
     try {
       const { username, email, password } = req.body;
       const user = new modelUser(username, email, password);
       const userCreate = await user.create();
 
-      return res.status(200).json({ userCreate });
-    } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        return res.status(403).json({
-          e: e.message,
-        });
+      if (userCreate instanceof Error) {
+        return next(userCreate);
       }
 
-      return res.status(400).json({
-        error: e,
-        e: e.message,
-      });
+      return res.status(200).json({ userCreate });
+    } catch (e) {
+      console.log(e);
+      next(e);
     }
   },
 
@@ -102,7 +98,6 @@ module.exports = {
 
         });
       }
-      console.log(email);
 
       const [, token] = authorization.split(' ');
 
@@ -148,7 +143,7 @@ module.exports = {
     }
   },
 
-  async updatePassword(req, res) {
+  async updatePassword(req, res, next) {
     try {
       const { authorization } = req.headers;
       const { password, new_password, confirm_password } = req.body;
@@ -184,11 +179,7 @@ module.exports = {
         },
       });
     } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        res.status(403).json({
-          e: e.message,
-        });
-      }
+      next(e);
     }
   },
 

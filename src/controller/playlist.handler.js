@@ -8,7 +8,7 @@ const Playlist = require('../model/Playlist');
 const { InvalidArgumentError, InternalServerError } = require('../model/errors');
 
 module.exports = {
-  async generateRandom(req, res) {
+  async generateRandom(req, res, next) {
     try {
       const { artist } = req.query;
 
@@ -25,12 +25,12 @@ module.exports = {
       res.status(200).json(ident);
     } catch (e) {
       if (e) {
-        res.status(400).json({ e: e.message });
+        next(e);
       }
     }
   },
 
-  async store(req, res) {
+  async store(req, res, next) {
     try {
       const { user } = req;
       const { name } = req.body;
@@ -51,25 +51,10 @@ module.exports = {
 
       res.status(200).json(create_playlist);
     } catch (e) {
-      if (e instanceof InternalServerError) {
-        return res.status(401).json({
-          e,
-          error_message: e.message,
-          statusCode: 401,
-        });
-      }
-
-      if (e instanceof InvalidArgumentError) {
-        return res.status(401).json({
-          e,
-          error_message: e.message,
-          statusCode: 401,
-
-        });
-      }
+      next(e);
     }
   },
-  async addTrack(req, res) {
+  async addTrack(req, res, next) {
     try {
       const { user } = req;
       const { track_id, name } = req.body;
@@ -95,34 +80,16 @@ module.exports = {
       }
 
       res.status(200).json(add);
-    } catch (error) {
-      if (error.statusCode === 400 || error.statusCode === 404) {
-        return res.status(401).json({
-          error: error.message,
-          statusCode: error.statusCode,
-        });
-      }
-
-      if (error instanceof InvalidArgumentError) {
-        if (error.message === 'That playlist not exists') {
+    } catch (err) {
+      if (err instanceof InvalidArgumentError) {
+        if (err.message === 'That playlist not exists') {
           return res.status(404).json({
-            error: error.message,
+            error: err.message,
 
           });
         }
-        return res.status(401).json({
-          error: error.message,
-          body: ['name', 'track_id'],
-        });
-      }
 
-      if (error) {
-        console.log(error);
-
-        return res.status(500).json({
-          error,
-          error_message: error.message,
-        });
+        next(err);
       }
     }
   },

@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const errors = require('./src/middleware/errors/error.handler');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,7 @@ const routes = require('./src/routes');
   }));
 
   app.use(routes);
+  app.use(errors);
 
   app.listen(PORT, () => {
     console.log(`Listening PORT ${PORT}`);

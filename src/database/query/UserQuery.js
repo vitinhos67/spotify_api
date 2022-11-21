@@ -28,7 +28,7 @@ module.exports = {
         password: newValue,
       });
     } catch (e) {
-      console.log(e);
+      return e;
     }
   },
 
@@ -38,7 +38,7 @@ module.exports = {
         email: newValue,
       });
     } catch (e) {
-      console.log(e);
+      return e;
     }
   },
 
