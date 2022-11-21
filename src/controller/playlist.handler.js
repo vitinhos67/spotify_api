@@ -90,6 +90,10 @@ module.exports = {
 
       const add = await Playlist.addSong(name, author_id, tracks);
 
+      if (add instanceof InvalidArgumentError) {
+        throw new InvalidArgumentError('That playlist not exists');
+      }
+
       res.status(200).json(add);
     } catch (error) {
       if (error.statusCode === 400 || error.statusCode === 404) {
@@ -100,6 +104,12 @@ module.exports = {
       }
 
       if (error instanceof InvalidArgumentError) {
+        if (error.message === 'That playlist not exists') {
+          return res.status(404).json({
+            error: error.message,
+
+          });
+        }
         return res.status(401).json({
           error: error.message,
           body: ['name', 'track_id'],

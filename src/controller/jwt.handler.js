@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 
 const User = require('../database/schemas/User');
-const { sign } = require('../../functions/jwt');
+const { sign_access_token, sign_reflesh_token, decode } = require('../../functions/jwt');
+const { InvalidArgumentError } = require('../model/errors');
 
 module.exports = {
   async store(req, res) {
@@ -40,13 +41,15 @@ module.exports = {
         id: user.id,
       };
 
-      const token = sign(value);
+      const access_token = sign_access_token(value);
+      const reflesh_token = sign_reflesh_token({ id: user.id });
 
       return res.status(200).json({
         statusCode: 200,
         statusMessage: 'success',
         data: {
-          token,
+          access_token,
+          reflesh_token,
         },
 
       });
@@ -54,6 +57,26 @@ module.exports = {
       return res.status(401).json({
         e,
       });
+    }
+  },
+  async reflesh(req, res) {
+    try {
+      const { reflesh_token } = req.params;
+      const payload = decode(reflesh_token);
+
+      const access_token = sign_access_token({ id: payload.payload.id });
+      const reflesh_token_renoved = sign_reflesh_token({ id: payload.payload.id });
+
+      res.status(200).json({
+        reflesh_token: reflesh_token_renoved,
+        access_token,
+      });
+    } catch (e) {
+      if (e instanceof InvalidArgumentError) {
+        return res.status(403).json({
+          message: e.message,
+        });
+      }
     }
   },
 };

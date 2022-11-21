@@ -12,6 +12,8 @@ const configs = {
   sess: process.env.sess,
   mongodb_uri: process.env.mongodb_uri,
   json_web_secret: process.env.json_web_secret,
+  endpoint: process.env.endpoint,
+  port: process.env.PORT,
 };
 
 module.exports = { spotifyKeys, spotifyURL, configs };

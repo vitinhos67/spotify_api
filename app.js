@@ -16,6 +16,7 @@ const routes = require('./src/routes');
   require('./src/database/connection/index');
 
   /** database * */
+
   app.use(cors({ origin: '*' }));
   app.use(helmet());
   app.use(express.json());
@@ -26,6 +27,7 @@ const routes = require('./src/routes');
     cookie: { maxAge: 60000 },
     resave: false,
   }));
+
   app.use(routes);
 
   app.listen(PORT, () => {

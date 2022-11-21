@@ -4,7 +4,7 @@ const routes = express.Router();
 
 const index = require('../controller/tracks.handler');
 const playlist = require('../controller/playlist.handler');
-const token_procedure = require('../controller/token-spotify');
+const token_procedure = require('../controller/token.spotify');
 const token_jwt = require('../controller/jwt.handler');
 const user = require('../controller/user.handler');
 const authorization = require('../middleware/Authentication');
@@ -24,7 +24,7 @@ routes.get('/callback', token_procedure.tokenStore);
 // ROUTE RELATIONAL WITH PLAYLIST
 routes.get('/generate', authorization.basics, playlist.generateRandom);
 routes.get('/create', authorization.basics, playlist.store);
-routes.get('/track/add', authorization.basics, playlist.addTrack);
+routes.get('/add/track', authorization.basics, playlist.addTrack);
 
 // ROUTE ACTION USER AND TRACKS
 routes.get('/', index.findTrack);
@@ -33,5 +33,6 @@ routes.delete('/liked-track', authorization.basics, index.removeTrack);
 
 // ROUTE FOR CREATE TOKEN JWT
 routes.post('/auth/token', token_jwt.store);
+routes.post('/auth/reflesh_token/:reflesh_token', token_jwt.reflesh);
 
 module.exports = routes;

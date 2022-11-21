@@ -26,6 +26,7 @@
     "node-fetch": "^3.2.3",
     "node-spotify-api": "^1.1.1",
     "querystring": "^0.2.1",
+    "rand-token": "^1.0.1",
     "request": "^2.88.2",
     "underscore": "^1.13.4",
     "validator": "^13.7.0"

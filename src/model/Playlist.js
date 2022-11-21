@@ -35,7 +35,7 @@ class Playlist {
       });
 
       if (!playlist) {
-        throw new InvalidArgumentError('Playlist nao encontrada');
+        throw new InvalidArgumentError('Playlist not find');
       }
 
       const addTrack = await playlistQuery.addTrack({
