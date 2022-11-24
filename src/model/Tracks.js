@@ -1,6 +1,6 @@
 const tracksQuery = require('../database/query/TracksQuery');
-const { spotifyURL } = require('../config/credentials');
-const spotify = require('../config/spotify/spotify-connetion');
+const { spotifyURL } = require('../../config/credentials');
+const spotify = require('../../config/spotify/spotify-connetion');
 
 const { endpoint } = spotifyURL;
 

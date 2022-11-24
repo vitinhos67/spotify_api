@@ -1,8 +1,8 @@
-const credentials = require('../config/credentials');
+const credentials = require('../../config/credentials');
 
 const { spotifyURL } = credentials;
 const { endpoint } = spotifyURL;
-const spotify = require('../config/spotify/spotify-connetion');
+const spotify = require('../../config/spotify/spotify-connetion');
 const ident_track = require('../../functions/ident-track');
 const Playlist = require('../model/Playlist');
 const { InvalidArgumentError, InternalServerError } = require('../model/errors');

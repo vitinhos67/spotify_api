@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { decode } = require('./jwt');
-const { configs } = require('../src/config/credentials');
+const { configs } = require('../config/credentials');
 const UserQuery = require('../src/database/query/UserQuery');
 const { InvalidArgumentError } = require('../src/model/errors');
 

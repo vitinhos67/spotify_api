@@ -1,7 +1,7 @@
 {
   "name": "api-spotify",
   "version": "1.0.0",
-  "description": "",
+  "description": "API that interacts with the spotify api.",
   "main": "app.js",
   "type": "commonjs",
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
+    "config": "^3.3.8",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

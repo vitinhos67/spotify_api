@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const credentials = require('../../config/credentials');
+const credentials = require('../../../config/credentials');
 
 const { configs } = credentials;
 

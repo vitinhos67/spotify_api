@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config({
   path: '../../.env',
 });
 const request = require('request');
-const { generateRandomString } = require('../config/spotify/utils');
+const { generateRandomString } = require('../../config/spotify/utils');
 
 const redirect_uri = 'http://localhost:3003/callback';
 
