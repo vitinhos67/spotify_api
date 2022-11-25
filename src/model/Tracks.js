@@ -10,12 +10,12 @@ class Tracks {
   }
 
   /**
-*
-* @param {string} user
-* @param {string} track
-*
-* Check if track exists in your profile and spotify;
-*/
+   *
+   * @param {string} user
+   * @param {string} track
+   *
+   * Check if track exists in your profile and spotify;
+   */
   static async verify(id, track) {
     try {
       await spotify.request(`${endpoint}/v1/tracks/${track}`);

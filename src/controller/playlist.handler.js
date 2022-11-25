@@ -43,7 +43,6 @@ module.exports = {
         name,
         author: user.username,
         author_id: user.id,
-
       };
 
       const playlist = new Playlist(obj);
@@ -85,7 +84,6 @@ module.exports = {
         if (err.message === 'That playlist not exists') {
           return res.status(404).json({
             error: err.message,
-
           });
         }
 

@@ -9,7 +9,6 @@ const redirect_uri = 'http://localhost:3003/callback';
 
 const stateKey = 'spotify_auth_state';
 module.exports = {
-
   async redirectToAuthorizedURI(req, res) {
     try {
       const state = generateRandomString(16);
@@ -35,6 +34,7 @@ module.exports = {
     try {
       const code = req.query.code || null;
       const state = req.query.state || null;
+      // eslint-disable-next-line security/detect-object-injection
       const storedState = req.cookies ? req.cookies[stateKey] : null;
 
       if (state === null && state !== storedState) {
@@ -53,7 +53,9 @@ module.exports = {
           'content-type': 'application/x-www-form-urlencoded',
         },
         headers: {
-          Authorization: `Basic ${(Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64'))}`,
+          Authorization: `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString(
+            'base64'
+          )}`,
         },
         json: true,
       };

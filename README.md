@@ -2,7 +2,7 @@
 
 A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e necessario ter uma conta e criar um DB no site.
 
-<br> 
+<br>
 
 <p>O arquivo .env e necessario para guardar as credenciais do codigo, até o momento, elas são:</p>
 
@@ -14,7 +14,7 @@ A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e n
 
 <br>
 
-.env sintaxe: 
+.env sintaxe:
 
 ```
 client_id
@@ -28,18 +28,18 @@ endpoint
 
 ```
 
-
 ### Mongoose string connection
 
 ```
 mongodb+srv://<username>:<password>@cluster0.5deos.mongodb.net/database
- ```
-</br>
+```
 
+</br>
 
 Após se conectar, você tera acessos as rotas da API.
 
 # Rotas
+
 ### User
 
 <br>
@@ -73,23 +73,26 @@ Não e necessario passar dados neste GET.</p>
 Certifique-se de emitir um token antes de tentar acessar as rotas para alterar dados de Users.
 
 Encontrar uma track:
+
 ```
 METHOD: GET
 q: track_name
 
 localhost:port?q=Heaven+Up+There
 ```
+
 <br>
 
 Adicionar uma track a lista do usuario, necessario autenticar através do Bearer Token.
 
 ```
 METHOD: POST
-Header: 
+Header:
  -Authorization: `Bearer <token>`
 
 URI: localhost:port/liked-track?track_id=id_song
 ```
+
 <br>
 
 Deletar uma track da lista do usuario, necessario autenticar através do Bearer Token.
@@ -98,10 +101,9 @@ Deletar uma track da lista do usuario, necessario autenticar através do Bearer 
 METHOD: DELETE
 URI: localhost:port/liked-track?track_id=id_song
 
-Header: 
+Header:
  - Authorization: Bearer <token>
 ```
-
 
 ### Token
 
@@ -110,26 +112,28 @@ O token e necessario para realizar operações para um usúario, como por exempl
 ```
 Method: POST
 URI: localhost:port/auth/token
-body: 
+body:
  - username: <username>
  - email: <email>
  - password": <password>
 
 ```
+
 <br></br>
+
 ### Playlists
 
 Necessario se autenticar com um usúario através do Bearer token. </br>
 Criar uma playlist:
+
 ```
 Authorization: Bearer <token>
 
 localhost:port/playlist/create
-body: 
+body:
  - name: <nome_playlist>
 
 ```
-
 
 Adicionar uma musica a uma track:
 
@@ -141,5 +145,3 @@ body:
  - track_id: <track_id> // Apenas id validos do spotify
  - reflesh_token: <seu_reflesh_token>
 ```
-
-

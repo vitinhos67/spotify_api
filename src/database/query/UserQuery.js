@@ -1,7 +1,6 @@
 const User = require('../schemas/User');
 
 module.exports = {
-
   async findUserById(id) {
     const user = await User.findById(id);
     return user;
@@ -51,5 +50,4 @@ module.exports = {
       console.log(e);
     }
   },
-
 };

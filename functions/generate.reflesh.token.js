@@ -12,7 +12,7 @@ const { endpoint, port } = configs;
  * it just receives reflesh_token to generate a new valid token
  * for the user and returns the already validated userGet
  *
-*/
+ */
 
 module.exports = async (reflesh_token) => {
   try {

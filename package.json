@@ -5,7 +5,9 @@
   "main": "app.js",
   "type": "commonjs",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "lint:prettier": "prettier --check .",
+    "lint:fix": "eslint --fix && prettier --write ."
   },
   "author": "Victor Santos",
   "license": "ISC",
@@ -36,6 +38,8 @@
     "eslint": "^8.13.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "nodemon": "^2.0.15"
+    "eslint-plugin-security": "^1.5.0",
+    "nodemon": "^2.0.15",
+    "prettier": "2.8.0"
   }
 }

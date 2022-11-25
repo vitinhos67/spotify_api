@@ -51,7 +51,6 @@ module.exports = {
           access_token,
           reflesh_token,
         },
-
       });
     } catch (e) {
       return res.status(401).json({
@@ -65,7 +64,9 @@ module.exports = {
       const payload = decode(reflesh_token);
 
       const access_token = sign_access_token({ id: payload.payload.id });
-      const reflesh_token_renoved = sign_reflesh_token({ id: payload.payload.id });
+      const reflesh_token_renoved = sign_reflesh_token({
+        id: payload.payload.id,
+      });
 
       res.status(200).json({
         reflesh_token: reflesh_token_renoved,

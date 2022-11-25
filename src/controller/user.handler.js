@@ -44,7 +44,6 @@ module.exports = {
         return res.status(400).json({
           status: 400,
           statusMessage: 'not_header_authorization',
-
         });
       }
 
@@ -71,9 +70,7 @@ module.exports = {
         old_username: user.username,
         data: {
           new_username: username,
-
         },
-
       });
     } catch (e) {
       if (e instanceof InvalidArgumentError) {
@@ -95,7 +92,6 @@ module.exports = {
         return res.status(400).json({
           status: 400,
           statusMessage: 'not_header_authorization',
-
         });
       }
 
@@ -122,9 +118,7 @@ module.exports = {
         old_email: user.email,
         data: {
           new_email: email,
-
         },
-
       });
     } catch (e) {
       if (e instanceof InvalidArgumentError) {
@@ -152,7 +146,6 @@ module.exports = {
         return res.status(400).json({
           status: 400,
           statusMessage: 'not_header_authorization',
-
         });
       }
 
@@ -163,10 +156,11 @@ module.exports = {
 
       const user = new modelUser(userFind.username, userFind.email, userFind.password);
 
-      const update = await user.updatePassword(
-        userFind.id,
-        { password, new_password, confirm_password },
-      );
+      const update = await user.updatePassword(userFind.id, {
+        password,
+        new_password,
+        confirm_password,
+      });
 
       return res.status(200).json({
         statusCode: 200,
@@ -182,5 +176,4 @@ module.exports = {
       next(e);
     }
   },
-
 };

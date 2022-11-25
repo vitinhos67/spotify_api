@@ -14,7 +14,6 @@ const func = (tracks) => {
         images: value.album.images,
         name: value.album.name,
         total_tracks: value.album.total_tracks,
-
       },
       artists: value.artists,
       external_ids: value.external_ids,

@@ -22,7 +22,9 @@ class User {
       throw new InvalidArgumentError('password not valid');
     }
 
-    if (typeof this._password !== 'string') throw new SyntaxError('The api does not accept data other than a string');
+    if (typeof this._password !== 'string') {
+      throw new SyntaxError('The api does not accept data other than a string');
+    }
 
     const salt = bcryptjs.genSaltSync(10);
     const hash = bcryptjs.hashSync(this._password, salt);

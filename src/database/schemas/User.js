@@ -23,7 +23,6 @@ const schemaUser = new mongoose.Schema({
     type: Array,
     default: [],
   },
-
 });
 
 module.exports = mongoose.model('users', schemaUser);

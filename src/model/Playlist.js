@@ -38,10 +38,13 @@ class Playlist {
         throw new InvalidArgumentError('Playlist not find');
       }
 
-      const addTrack = await playlistQuery.addTrack({
-        name: playlist.name,
-        id: playlist.id,
-      }, tracks);
+      const addTrack = await playlistQuery.addTrack(
+        {
+          name: playlist.name,
+          id: playlist.id,
+        },
+        tracks,
+      );
 
       return addTrack;
     } catch (e) {

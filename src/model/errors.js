@@ -41,5 +41,9 @@ class SyntaxError extends Error {
 }
 
 module.exports = {
-  InvalidArgumentError, ValueNotFound, InternalServerError, ValueAlreadyExists, SyntaxError,
+  InvalidArgumentError,
+  ValueNotFound,
+  InternalServerError,
+  ValueAlreadyExists,
+  SyntaxError,
 };

@@ -6,7 +6,6 @@ const { verify } = require('../../functions/jwt');
 const generate_reflesh_token = require('../../functions/generate.reflesh.token');
 
 module.exports = {
-
   async basics(req, res, next) {
     try {
       const { authorization } = req.headers;
@@ -49,5 +48,4 @@ module.exports = {
       next(e);
     }
   },
-
 };

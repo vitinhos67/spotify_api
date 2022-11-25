@@ -7,13 +7,9 @@ const spotify = require('../../config/spotify/spotify-connetion');
 const TracksQuery = require('../database/query/TracksQuery');
 const Tracks = require('../model/Tracks');
 
-const {
-  InvalidArgumentError,
-  ValueAlreadyExists,
-} = require('../model/errors');
+const { InvalidArgumentError, ValueAlreadyExists } = require('../model/errors');
 
 module.exports = {
-
   async findTrack(req, res, next) {
     try {
       const { searchTrack } = req.body;

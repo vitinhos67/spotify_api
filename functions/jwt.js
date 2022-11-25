@@ -6,7 +6,6 @@ const credentials = require('../config/credentials').configs;
 const secret = credentials.json_web_secret;
 
 module.exports = {
-
   sign_access_token(payload) {
     return jwt.sign(payload, secret, {
       expiresIn: process.env.expiresIn_access_token,
@@ -46,5 +45,4 @@ module.exports = {
       expiresIn: process.env.expiresIn_reflesh_token,
     });
   },
-
 };
