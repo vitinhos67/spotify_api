@@ -13,3 +13,4 @@ services:
       - sess=${sess}
       - mongodb_uri=${mongodb_uri}
       - json_web_secret=${json_web_secret}
+

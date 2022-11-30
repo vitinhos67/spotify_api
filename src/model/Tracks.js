@@ -4,18 +4,19 @@ const spotify = require('../../config/spotify/spotify-connetion');
 
 const { endpoint } = spotifyURL;
 
+/**
+   *
+   * @typedef {Object} Track
+   * @property {string} track
+   *
+   * The class responsible for manipulating track data
+   */
+
 class Tracks {
   constructor(track) {
     this.track = track;
   }
 
-  /**
-   *
-   * @param {string} user
-   * @param {string} track
-   *
-   * Check if track exists in your profile and spotify;
-   */
   static async verify(id, track) {
     try {
       await spotify.request(`${endpoint}/v1/tracks/${track}`);

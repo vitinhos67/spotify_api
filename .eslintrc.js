@@ -18,5 +18,6 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-plusplus': 0,
     'max-classes-per-file': ['error', 10],
+    'no-undef': 0,
   },
 };

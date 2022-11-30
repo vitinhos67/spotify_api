@@ -5,9 +5,11 @@
   "main": "app.js",
   "type": "commonjs",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "node app.js",
+    "dev": "bash ./commands/database_test.bash && nodemon server.js --ignore __tests__",
     "lint:prettier": "prettier --check .",
-    "lint:fix": "eslint --fix && prettier --write ."
+    "lint:fix": "eslint --fix && prettier --write .",
+    "test": "jest"
   },
   "author": "Victor Santos",
   "license": "ISC",
@@ -35,11 +37,15 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
+    "@types/jest": "^29.2.3",
+    "@types/supertest": "^2.0.12",
     "eslint": "^8.13.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-security": "^1.5.0",
+    "jest": "^29.3.1",
     "nodemon": "^2.0.15",
-    "prettier": "2.8.0"
+    "prettier": "2.8.0",
+    "supertest": "^6.3.1"
   }
 }

@@ -16,7 +16,7 @@ module.exports = {
         return next(userCreate);
       }
 
-      return res.status(200).json({ userCreate });
+      return res.status(204).json({ userCreate });
     } catch (e) {
       console.log(e);
       next(e);
@@ -27,7 +27,7 @@ module.exports = {
     try {
       const users = await User.find();
 
-      return res.status(201).json({
+      return res.status(200).json({
         users,
       });
     } catch (e) {

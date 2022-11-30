@@ -3,7 +3,11 @@ const credentials = require('../../../config/credentials');
 
 const { configs } = credentials;
 
-mongoose.connect(configs.mongodb_uri);
+if (process.env.NODE_ENV === 'test') {
+  mongoose.connect(configs.mongodb_test);
+} else {
+  mongoose.connect(configs.mongodb_uri);
+}
 
 const db = mongoose.connection;
 db.on('connected', () => console.log('Data base connected'));

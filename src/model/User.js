@@ -3,6 +3,17 @@ const bcryptjs = require('bcryptjs');
 const userQuery = require('../database/query/UserQuery');
 const { InvalidArgumentError, ValueAlreadyExists } = require('./errors');
 
+/**
+ * @typedef {Object} User
+ * @property {String} username
+ * @property {String} email
+ * @property {String} password
+ *
+ * The class responsible for manipulation User as Add, Remover, Update and make checkout
+ * of Users
+ *
+ */
+
 class User {
   constructor(username, email, password) {
     this._username = username;

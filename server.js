@@ -1,11 +1,8 @@
-const express = require('express');
+require('dotenv').config();
+const app = require('./app');
 
-const app = express();
+const { PORT_ENV } = process.env;
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Listening PORT ${PORT}`);
+app.listen(PORT_ENV, async () => {
+  console.log(`Listening port ${PORT_ENV} in mode development`);
 });
-
-module.exports = app;

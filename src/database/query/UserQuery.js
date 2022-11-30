@@ -20,6 +20,13 @@ module.exports = {
 
     return userCreate;
   },
+  async deleteUser(email) {
+    const userCreate = await User.findOneAndDelete({
+      email,
+    });
+
+    return userCreate;
+  },
 
   async updateFieldPassword(id, newValue) {
     try {
