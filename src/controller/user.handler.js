@@ -1,8 +1,5 @@
-const { verify } = require('../../functions/jwt');
-
 const User = require('../database/schemas/User');
 const modelUser = require('../model/User');
-const UserQuery = require('../database/query/UserQuery');
 const { InvalidArgumentError } = require('../model/errors');
 
 module.exports = {
@@ -37,21 +34,8 @@ module.exports = {
 
   async updateUsername(req, res) {
     try {
-      const { authorization } = req.headers;
+      const user = req;
       const { username } = req.body;
-
-      if (!authorization) {
-        return res.status(400).json({
-          status: 400,
-          statusMessage: 'not_header_authorization',
-        });
-      }
-
-      const [, token] = authorization.split(' ');
-
-      const decryptUser = verify(token);
-
-      const user = await User.findOne({ id: decryptUser.id });
 
       if (!user) {
         return res.status(400).json({
@@ -63,9 +47,8 @@ module.exports = {
       const user_model = new modelUser(user.username, user.email);
 
       await user_model.updateUsername(user, username);
-
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(202).json({
+        statusCode: 202,
         statusMessage: 'user_update_successfully',
         old_username: user.username,
         data: {
@@ -85,35 +68,15 @@ module.exports = {
 
   async updateEmail(req, res) {
     try {
-      const { authorization } = req.headers;
+      const { user } = req;
       const { email } = req.body;
-
-      if (!authorization) {
-        return res.status(400).json({
-          status: 400,
-          statusMessage: 'not_header_authorization',
-        });
-      }
-
-      const [, token] = authorization.split(' ');
-
-      const decryptUser = verify(token);
-
-      const user = await UserQuery.findUserById(decryptUser.id);
-
-      if (!user) {
-        return res.status(400).json({
-          statusCode: 400,
-          status_message: 'user_invalid',
-        });
-      }
 
       const _user = new modelUser(user.username, user.email, user.password);
 
-      const update_message = await _user.updateEmail(email);
+      await _user.updateEmail(email);
 
-      return res.status(201).json({
-        statusCode: update_message.status_code,
+      return res.status(202).json({
+        statusCode: 202,
         statusMessage: 'user_update_successfully',
         old_email: user.email,
         data: {
@@ -139,31 +102,18 @@ module.exports = {
 
   async updatePassword(req, res, next) {
     try {
-      const { authorization } = req.headers;
+      const { user } = req;
       const { password, new_password, confirm_password } = req.body;
 
-      if (!authorization) {
-        return res.status(400).json({
-          status: 400,
-          statusMessage: 'not_header_authorization',
-        });
-      }
-
-      const [, token] = authorization.split(' ');
-      const decryptUser = verify(token);
-
-      const userFind = await UserQuery.findUserById(decryptUser.id);
-
-      const user = new modelUser(userFind.username, userFind.email, userFind.password);
-
-      const update = await user.updatePassword(userFind.id, {
+      const userModel = new modelUser(user.username, user.email, user.password);
+      const update = await userModel.updatePassword(user.id, {
         password,
         new_password,
         confirm_password,
       });
 
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(202).json({
+        statusCode: 202,
         statusMessage: 'password_update_successfully',
         data: {
           old_password: password,

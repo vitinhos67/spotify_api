@@ -20,7 +20,16 @@ module.exports = {
 
     return userCreate;
   },
-  async deleteUser(email) {
+  async deleteUser(id) {
+    try {
+      const userCreate = await User.findByIdAndDelete(id);
+
+      return userCreate;
+    } catch (e) {
+      return e;
+    }
+  },
+  async deleteUserByEmail(email) {
     const userCreate = await User.findOneAndDelete({
       email,
     });

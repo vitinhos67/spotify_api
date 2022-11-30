@@ -117,10 +117,6 @@ class User {
     }
 
     await userQuery.updateFieldEmail(user.id, email);
-
-    return {
-      status_code: 204,
-    };
   }
 
   async updateUsername({ id }, username) {
