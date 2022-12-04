@@ -17,27 +17,31 @@ A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e n
 .env sintaxe:
 
 ```
-client_id
-client_secret
-sess
-mongodb_uri
-json_web_secret
-json_web_reflesh_token
-expiresIn_reflesh_token
-endpoint
+client_id = 
+client_secret = 
+sess = 
+mongodb_uri = 
+mongo_db_test = 
+json_web_secret = 
+reflesh_token_secret = 
+expiresIn_access_token =
+expiresIn_reflesh_token =
+endpoint = 
+NODE_ENV = 
+PORT_ENV = 
+PORT =
+mongodb_test_username = 
+mongodb_test_password =
 
 ```
-
 ### Mongoose string connection
 
 ```
 mongodb+srv://<username>:<password>@cluster0.5deos.mongodb.net/database
 ```
-
 </br>
 
 Após se conectar, você tera acessos as rotas da API.
-
 # Rotas
 
 ### User
