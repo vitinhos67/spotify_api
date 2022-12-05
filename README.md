@@ -6,15 +6,25 @@ A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e n
 
 <p>O arquivo .env e necessario para guardar as credenciais do codigo, até o momento, elas são:</p>
 
-<li>client_id: necessario para autenticar com a API do spotify.</li>
-<li>client_secret = necessario para autenticar com a API do spotify.</li>
-<li>sess = Um secret para o modulo express.session, faz o uso de cookies.</li>
-<li>mongodb_uri = Mongoose string connection, String para conectar ao mongodb, link abaixo, basta subistituir os dados.</li>
-<li>json_web_secret = secret para o jwt.</li>
+|        client_id        |        necessario para autenticar com a API do spotify.        |
+|:-----------------------:|:--------------------------------------------------------------:|
+|      client_secret      |        necessario para autenticar com a API do spotify.        |
+|           sess          | Um secret para o modulo express.session, faz o uso de cookies. |
+|       mongodb_uri       |                   Mongoose string connection                   |
+|      mongo_db_test      |               Banco MongoDB para desinvolvimento               |
+|     json_web_secret     |                       secret para o jwt.                       |
+|   reflesh_token_secret  |                    secret para reflesh token                   |
+|  expiresIn_access_token |             tempo de validação para o access token             |
+| expiresIn_reflesh_token |             tempo de validação para o reflesh token            |
+|  mongodb_test_username  |            username para rodar a aplicação do docker           |
+|  mongodb_test_password  |            password para rodar a aplicação do docker           |
+|         NODE_ENV        |    Utilizado para ver se a aplicação está em desenvolvimento   |
+|           PORT          |                     Porta usada em produção                    |
+|         PORT_DEV        |                   Porta para desenvolvimento                   |
 
 <br>
 
-.env sintaxe:
+.env
 
 ```
 client_id = 
@@ -34,14 +44,17 @@ mongodb_test_username =
 mongodb_test_password =
 
 ```
+
 ### Mongoose string connection
 
 ```
 mongodb+srv://<username>:<password>@cluster0.5deos.mongodb.net/database
 ```
+
 </br>
 
 Após se conectar, você tera acessos as rotas da API.
+
 # Rotas
 
 ### User

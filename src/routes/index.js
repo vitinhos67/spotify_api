@@ -12,9 +12,9 @@ const authorization = require('../middleware/Authentication');
 routes.post('/user', user.store);
 routes.get('/user/', user.show);
 
-routes.post('/user/update/username', authorization.basics, user.updateUsername);
-routes.post('/user/update/email', authorization.basics, user.updateEmail);
-routes.post('/user/update/password', authorization.basics, user.updatePassword);
+routes.put('/user/update/username', authorization.basics, user.updateUsername);
+routes.put('/user/update/email', authorization.basics, user.updateEmail);
+routes.put('/user/update/password', authorization.basics, user.updatePassword);
 
 // ROUTE TO PROCESSING/REDIRECT/CREATE OF TOKEN SPOTIFY
 routes.get('/token', token_procedure.redirectToAuthorizedURI);

@@ -1,6 +1,5 @@
 const User = require('../database/schemas/User');
 const modelUser = require('../model/User');
-const { InvalidArgumentError } = require('../model/errors');
 
 module.exports = {
   async store(req, res, next) {
@@ -15,20 +14,18 @@ module.exports = {
 
       return res.status(204).json({ userCreate });
     } catch (e) {
-      console.log(e);
       next(e);
     }
   },
 
-  async show(req, res) {
+  async show(req, res, next) {
     try {
       const users = await User.find();
-
       return res.status(200).json({
         users,
       });
     } catch (e) {
-      console.log(e);
+      next(e);
     }
   },
 
@@ -56,13 +53,7 @@ module.exports = {
         },
       });
     } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        res.status(401).json({
-          statusCode: 401,
-          statusMessage: 'internal_error',
-          data: e.message,
-        });
-      }
+      next(e);
     }
   },
 
@@ -84,19 +75,7 @@ module.exports = {
         },
       });
     } catch (e) {
-      if (e instanceof InvalidArgumentError) {
-        return res.status(403).json({
-          statusCode: 403,
-          statusMessage: 'internal_error',
-          data: e.message,
-        });
-      }
-
-      res.status(500).json({
-        statusCode: 500,
-        statusMessage: 'internal_error',
-        data: e,
-      });
+      next(e);
     }
   },
 
@@ -106,6 +85,7 @@ module.exports = {
       const { password, new_password, confirm_password } = req.body;
 
       const userModel = new modelUser(user.username, user.email, user.password);
+
       const update = await userModel.updatePassword(user.id, {
         password,
         new_password,

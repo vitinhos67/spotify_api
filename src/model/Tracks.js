@@ -10,7 +10,7 @@ const { endpoint } = spotifyURL;
    * @property {string} track
    *
    * The class responsible for manipulating track data
-   */
+*/
 
 class Tracks {
   constructor(track) {
