@@ -1,10 +1,12 @@
 const User = require('../database/schemas/User');
 const modelUser = require('../model/User');
+const { InvalidArgumentError } = require('../model/errors');
 
 module.exports = {
   async store(req, res, next) {
     try {
       const { username, email, password } = req.body;
+
       const user = new modelUser(username, email, password);
       const userCreate = await user.create();
 
@@ -12,7 +14,7 @@ module.exports = {
         return next(userCreate);
       }
 
-      return res.status(204).json({ userCreate });
+      return res.status(201).json(userCreate);
     } catch (e) {
       next(e);
     }
@@ -21,9 +23,7 @@ module.exports = {
   async show(req, res, next) {
     try {
       const users = await User.find();
-      return res.status(200).json({
-        users,
-      });
+      return res.status(200).json(users);
     } catch (e) {
       next(e);
     }
@@ -35,10 +35,7 @@ module.exports = {
       const { username } = req.body;
 
       if (!user) {
-        return res.status(400).json({
-          statusCode: 400,
-          status_message: 'user_invalid',
-        });
+        throw new InvalidArgumentError('user_invalid');
       }
 
       const user_model = new modelUser(user.username, user.email);

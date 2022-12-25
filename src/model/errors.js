@@ -27,7 +27,7 @@ class ValueAlreadyExists extends Error {
     super(message);
     this.message = message;
     this.name = 'ValueAlreadyExists';
-    this.statusCode = 400;
+    this.statusCode = 403;
   }
 }
 

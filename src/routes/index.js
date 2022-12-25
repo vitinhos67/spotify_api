@@ -10,7 +10,7 @@ const authorization = require('../middleware/Authentication');
 
 // ROUTE FOR CREATE/DELETE/UPTADE/READ USER
 routes.post('/user', user.store);
-routes.get('/user/', user.show);
+routes.get('/user', user.show);
 
 routes.put('/user/update/username', authorization.basics, user.updateUsername);
 routes.put('/user/update/email', authorization.basics, user.updateEmail);

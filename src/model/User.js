@@ -2,6 +2,7 @@ const validator = require('validator');
 const bcryptjs = require('bcryptjs');
 const userQuery = require('../database/query/UserQuery');
 const { InvalidArgumentError, ValueAlreadyExists } = require('./errors');
+const jwt = require('../../functions/jwt');
 
 /**
  * @typedef {Object} User
@@ -64,7 +65,15 @@ class User {
         password,
       });
 
-      return user;
+      const auth = {
+        access_token: jwt.sign_access_token({ id: user.id }),
+        reflesh_token: jwt.sign_reflesh_token({ id: user.id }),
+      };
+
+      return {
+        user,
+        ...auth,
+      };
     } catch (e) {
       return e;
     }
