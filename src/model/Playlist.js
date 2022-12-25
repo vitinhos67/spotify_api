@@ -1,56 +1,25 @@
-const playlistQuery = require('../database/query/PlaylistQuery');
-const { InvalidArgumentError } = require('./errors');
+const mongoose = require('mongoose');
 
-class Playlist {
-  constructor({
-    name, author, author_id, tracks,
-  }) {
-    this._name = name;
-    this._author = author;
-    this._author_id = author_id;
-    this._tracks = !tracks ? [] : tracks;
-  }
+const SchemaPlaylist = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  author: {
+    type: String,
+    required: true,
+  },
+  author_id: {
+    type: String,
+    required: true,
+  },
+  tracks: {
+    type: Array,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-  async create() {
-    try {
-      const playlist = await playlistQuery.create({
-        name: this._name,
-        author: this._author,
-        author_id: this._author_id,
-        tracks: this._tracks,
-      });
-
-      return playlist;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  static async addSong(name, author_id, tracks) {
-    try {
-      const playlist = await playlistQuery.findPlaylist({
-        name,
-        author_id,
-      });
-
-      if (!playlist) {
-        throw new InvalidArgumentError('Playlist not find');
-      }
-
-      const addTrack = await playlistQuery.addTrack(
-        {
-          name: playlist.name,
-          id: playlist.id,
-        },
-        tracks,
-      );
-
-      return addTrack;
-    } catch (e) {
-      return e;
-    }
-  }
-}
-
-module.exports = Playlist;
+module.exports = mongoose.model('playlists', SchemaPlaylist);

@@ -1,4 +1,4 @@
-const User = require('../schemas/User');
+const User = require('../../model/User');
 
 // $in - Search for items that have
 // $nin - Search for items that dont have

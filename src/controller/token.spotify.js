@@ -54,7 +54,7 @@ module.exports = {
         },
         headers: {
           Authorization: `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString(
-            'base64'
+            'base64',
           )}`,
         },
         json: true,

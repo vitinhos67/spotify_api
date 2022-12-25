@@ -5,9 +5,9 @@ const { endpoint } = spotifyURL;
 const ident_track = require('../../functions/ident-track');
 const spotify = require('../../config/spotify/spotify-connetion');
 const TracksQuery = require('../database/query/TracksQuery');
-const Tracks = require('../model/Tracks');
+const Tracks = require('../service/tracks.service');
 
-const { InvalidArgumentError, ValueAlreadyExists } = require('../model/errors');
+const { InvalidArgumentError, ValueAlreadyExists } = require('../service/errors');
 
 module.exports = {
   async findTrack(req, res, next) {

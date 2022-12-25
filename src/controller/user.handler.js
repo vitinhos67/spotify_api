@@ -1,6 +1,6 @@
-const User = require('../database/schemas/User');
-const modelUser = require('../model/User');
-const { InvalidArgumentError } = require('../model/errors');
+const User = require('../model/User');
+const modelUser = require('../service/user.service');
+const { InvalidArgumentError } = require('../service/errors');
 
 module.exports = {
   async store(req, res, next) {

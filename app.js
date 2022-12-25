@@ -14,7 +14,7 @@ const routes = require('./src/routes');
 (async () => {
   /** database  */
 
-  require('./src/database/connection/index');
+  require('./src/database/connection');
 
   /** database * */
 

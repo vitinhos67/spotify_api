@@ -1,10 +1,9 @@
-const Playlist = require('../schemas/Playlist');
+const Playlist = require('../../model/Playlist');
 
 module.exports = {
   async create({
     name, author, author_id, tracks,
   }) {
-    console.log(name, author, author_id, tracks);
     try {
       const playlist = await Playlist.create({
         name,

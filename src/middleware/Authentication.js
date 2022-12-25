@@ -1,5 +1,5 @@
 const { TokenExpiredError } = require('jsonwebtoken');
-const { InvalidArgumentError } = require('../model/errors');
+const { InvalidArgumentError } = require('../service/errors');
 const UserQuery = require('../database/query/UserQuery');
 
 const { verify } = require('../../functions/jwt');

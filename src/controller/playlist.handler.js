@@ -5,7 +5,7 @@ const { endpoint } = spotifyURL;
 const spotify = require('../../config/spotify/spotify-connetion');
 const ident_track = require('../../functions/ident-track');
 const Playlist = require('../model/Playlist');
-const { InvalidArgumentError, InternalServerError } = require('../model/errors');
+const { InvalidArgumentError, InternalServerError } = require('../service/errors');
 
 module.exports = {
   async generateRandom(req, res, next) {

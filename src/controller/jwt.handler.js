@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs');
 
-const User = require('../database/schemas/User');
+const User = require('../service/user.service');
 const { sign_access_token, sign_reflesh_token, decode } = require('../../functions/jwt');
-const { InvalidArgumentError } = require('../model/errors');
+const { InvalidArgumentError } = require('../service/errors');
 
 module.exports = {
   async store(req, res) {
