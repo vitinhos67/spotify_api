@@ -48,11 +48,10 @@ mongodb_test_password =
 ### Mongoose string connection
 
 ```
-mongodb+srv://<username>:<password>@cluster0.5deos.mongodb.net/database
+mongodb+srv://<username>:<password>@cluster0.5deos.mongodb.net/<database>
 ```
 
 </br>
-
 Após se conectar, você tera acessos as rotas da API.
 
 # Rotas
@@ -88,7 +87,6 @@ Não e necessario passar dados neste GET.</p>
 ### Tracks
 
 Certifique-se de emitir um token antes de tentar acessar as rotas para alterar dados de Users.
-
 Encontrar uma track:
 
 ```

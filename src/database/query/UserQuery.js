@@ -20,10 +20,9 @@ module.exports = {
 
     return userCreate;
   },
-  async deleteUser(id) {
+  async deleteUsersAfterTest() {
     try {
-      const userCreate = await User.findByIdAndDelete(id);
-
+      const userCreate = await User.deleteMany({});
       return userCreate;
     } catch (e) {
       return e;

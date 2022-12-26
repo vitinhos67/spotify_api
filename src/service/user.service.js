@@ -70,10 +70,12 @@ class User {
         reflesh_token: jwt.sign_reflesh_token({ id: user.id }),
       };
 
-      return {
-        user,
+      const result = {
+        ...user._doc,
         ...auth,
       };
+
+      return result;
     } catch (e) {
       return e;
     }
@@ -84,14 +86,14 @@ class User {
       throw new InvalidArgumentError('Check Values. Necessity password, new_password, confirm_password');
     }
 
-    const decryptPassword = await bcryptjs.compare(password, this._password);
+    const checkPassword = await bcryptjs.compare(password, this._password);
 
-    if (!decryptPassword) {
-      throw new InvalidArgumentError('Password invalid.');
+    if (!checkPassword) {
+      throw new InvalidArgumentError('invalid_password');
     }
 
     if (new_password !== confirm_password) {
-      throw new InvalidArgumentError('Password_not_accept');
+      throw new InvalidArgumentError('password_and_confirm_password_are_different');
     }
 
     const salt = bcryptjs.genSaltSync(10);
