@@ -8,7 +8,7 @@ const { InvalidArgumentError, InternalServerError } = require('../service/errors
 module.exports = {
   async generateRandomPlaylist(req, res, next) {
     try {
-      const { artist } = req.query;
+      const { artist, limit } = req.query;
 
       if (!artist) {
         return res.status(403).json({
@@ -16,7 +16,7 @@ module.exports = {
         });
       }
 
-      const response = await spotify.request(`${endpoint}/v1/recommendations?seed_artists=${artist}&limit=1`);
+      const response = await spotify.request(`${endpoint}/v1/recommendations?seed_artists=${artist}&limit=${limit}`);
 
       const ident = ident_track(response.tracks);
 
