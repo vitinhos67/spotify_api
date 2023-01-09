@@ -6,10 +6,10 @@ A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e n
 
 <p>O arquivo .env e necessario para guardar as credenciais do codigo, até o momento, elas são:</p>
 
-|        client_id        |        necessario para autenticar com a API do spotify.        |
+|   Variavel de Ambiente: |                            Uso para:                          |
 |:-----------------------:|:--------------------------------------------------------------:|
-|      client_secret      |        necessario para autenticar com a API do spotify.        |
-|           sess          | Um secret para o modulo express.session, faz o uso de cookies. |
+|       client_id        |                 autenticar com a API do spotify.                |
+|      client_secret      |                autenticar com a API do spotify
 |       mongodb_uri       |                   Mongoose string connection                   |
 |      mongo_db_test      |               Banco MongoDB para desinvolvimento               |
 |     json_web_secret     |                       secret para o jwt.                       |
@@ -24,139 +24,159 @@ A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e n
 
 <br>
 
-.env
-
-```
-client_id = 
-client_secret = 
-sess = 
-mongodb_uri = 
-mongo_db_test = 
-json_web_secret = 
-reflesh_token_secret = 
-expiresIn_access_token =
-expiresIn_reflesh_token =
-endpoint = 
-NODE_ENV = 
-PORT_ENV = 
-PORT =
-mongodb_test_username = 
-mongodb_test_password =
-
-```
-
+```bash
 ### Mongoose string connection
-
-```
 mongodb+srv://<username>:<password>@cluster0.5deos.mongodb.net/<database>
 ```
+Após se conectar, você tera acessos as rotas da API.
 
 </br>
-Após se conectar, você tera acessos as rotas da API.
 
 # Rotas
 
-### User
+## Usuario
 
 <br>
 
-```
+```bash
+###Endpoint
 localhost:port/user
 ```
 
 As rotas de usuarios podem ser usado passando o mesmo parametro, basta escolher qual tipo de requisição HTTP será utilizada, entre ela temos POST,GET até o momento.
 </br>
 
-<h4>- POST<h4>
+### POST 
 <p>Utilizada para criar um usuario. </p>
 
-```
-body:
- -username: <username>
- -email: <email>
- -password: <password>
-}
-```
 
-<h4> - GET<h4>
+<li>username</li>
+<li>password</li>
+<li>email</li>
+
+### GET
+
 <p>Utilizada para retornar todos os usuario.
-Não e necessario passar dados neste GET.</p>
+
 
 </br>
 
-### Tracks
+<hr>
 
-Certifique-se de emitir um token antes de tentar acessar as rotas para alterar dados de Users.
-Encontrar uma track:
+## Tracks
 
-```
-METHOD: GET
-q: track_name
-
-localhost:port?q=Heaven+Up+There
+```bash
+### Endpoint
+http://localhost:port/track?q='name'
 ```
 
-<br>
 
-Adicionar uma track a lista do usuario, necessario autenticar através do Bearer Token.
+<p>Certifique-se de emitir um token antes de tentar acessar as rotas para alterar dados de Users.
+</p>
 
+
+### GET
+<p>Utilize esta roda quando quiser encontrar uma musica</p>
+
+
+Query:
+
+<li>q</li>
+<br/>
+
+Exemplo: <strong>localhost:port?q=Heaven+Up+There</strong>
+
+<br/>
+
+<p>Adiciona uma musica a lista de musicas curtidas do usuario com:</p>
+
+```bash
+localhost:port/track/:track_id ### PUT METHOD
 ```
-METHOD: POST
+
 Header:
- -Authorization: `Bearer <token>`
+<ul>
+    <li>Authorization bearer</li>
+    <li>Reflesh_Token</li>
+</ul>
 
-URI: localhost:port/liked-track?track_id=id_song
+<p>Deletar uma musica a lista de musicas curtidas do usuario com:</p>
+
+```bash
+localhost:port/track/:track_id ### DELETE METHOD
 ```
-
-<br>
-
-Deletar uma track da lista do usuario, necessario autenticar através do Bearer Token.
-
-```
-METHOD: DELETE
-URI: localhost:port/liked-track?track_id=id_song
 
 Header:
- - Authorization: Bearer <token>
-```
+<ul>
+    <li>Authorization bearer</li>
+    <li>Reflesh_Token</li>
+</ul>
+
 
 ### Token
 
-O token e necessario para realizar operações para um usúario, como por exemplo deletar, adicionar, modificar. Para isso utilizamos
+<p>O token e necessario para realizar operações para um usúario, como por exemplo deletar, adicionar, modificar. Para isso utilizamos com o metodo <strong>POST</strong>:</p>
 
+```bash
+http://localhost:port/auth/token ### POST Method
 ```
-Method: POST
-URI: localhost:port/auth/token
-body:
- - username: <username>
- - email: <email>
- - password": <password>
+Body:
 
+<ul>
+    <li>username</li>
+    <li>email</li>
+    <li>password</li>
+</ul>
+
+
+
+Para atualizarmos o token de um usuario utilizamos:
+
+```bash
+http://localhost:port/reflesh_token/:reflesh_token ### POST Method
 ```
 
-<br></br>
+<hr>
 
 ### Playlists
 
 Necessario se autenticar com um usúario através do Bearer token. </br>
-Criar uma playlist:
 
+
+Criar uma playlist com o metodo <strong>POST</strong>:
+
+```bash
+localhost:port/playlist/create ### POST Method
 ```
-Authorization: Bearer <token>
+<p>Body:</p>
 
-localhost:port/playlist/create
-body:
- - name: <nome_playlist>
+<ul>
+    <li>name</li>
 
+</ul>
+
+<p>Header:</p>
+<ul>
+    <li>Authorization bearer</li>
+    <li>Reflesh_Token</li>
+</ul>
+
+Adicionar uma track a uma playlist:
+
+```bash
+http://localhost:port/playlist/add/track ### PUT Method
 ```
+<p>Body:</p>
 
-Adicionar uma musica a uma track:
+<ul>
+    <li>name - Nome da Playlist </li>
+     <li>track_id</li>
 
-```
-Authorization: Bearer <token>
-method: POST
-body:
- - name: <nome_playlist>
- - track_id: <track_id> // Apenas id validos do spotify
- - reflesh_token: <seu_reflesh_token>
-```
+</ul>
+
+
+<p>Header:</p>
+<ul>
+    <li>Authorization bearer</li>
+    <li>Reflesh_Token</li>
+</ul>

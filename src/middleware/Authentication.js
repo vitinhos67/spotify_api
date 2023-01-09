@@ -40,7 +40,6 @@ module.exports = {
         throw new InvalidArgumentError('User not find.');
       }
 
-      console.log('era para eu estart aqui');
       req.user = user;
       next();
     } catch (e) {

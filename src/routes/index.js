@@ -28,7 +28,7 @@ routes.put('/user/update/password', AuthBearer, updatePassword);
 
 routes.get('/playlist/generate', AuthBearer, generateRandomPlaylist);
 routes.post('/playlist', AuthBearer, storePlaylist);
-routes.get('/playlist/add/track', AuthBearer, addTrack);
+routes.put('/playlist/add/track', AuthBearer, addTrack);
 
 routes.get('/track', index.findTrack);
 routes.put('/track/:track_id', AuthBearer, index.addSongsInTracksLiked);
