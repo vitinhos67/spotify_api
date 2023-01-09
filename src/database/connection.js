@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-const credentials = require('../../config/credentials');
-
-const { configs } = credentials;
+const { mongodb_test, mongodb_uri } = require('../../config/constants').configs;
 
 if (process.env.NODE_ENV === 'test') {
-  mongoose.connect(configs.mongodb_test);
+  mongoose.connect(mongodb_test);
 } else {
-  mongoose.connect(configs.mongodb_uri);
+  mongoose.connect(mongodb_uri);
 }
 
 const db = mongoose.connection;

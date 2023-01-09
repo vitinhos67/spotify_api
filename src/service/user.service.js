@@ -2,7 +2,7 @@ const validator = require('validator');
 const bcryptjs = require('bcryptjs');
 const userQuery = require('../database/query/UserQuery');
 const { InvalidArgumentError, ValueAlreadyExists } = require('./errors');
-const jwt = require('../../functions/jwt');
+const jwt = require('../../utils/jwt');
 
 /**
  * @typedef {Object} User

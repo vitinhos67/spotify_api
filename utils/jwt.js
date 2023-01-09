@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { InvalidArgumentError } = require('../src/service/errors');
 
-const credentials = require('../config/credentials').configs;
+const credentials = require('../config/constants').configs;
 
 const {
   json_web_secret,

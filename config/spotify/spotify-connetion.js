@@ -1,6 +1,6 @@
 const Spotify = require('node-spotify-api');
 
-const credentials = require('../credentials');
+const credentials = require('../constants');
 
 const { spotifyKeys } = credentials;
 

@@ -2,35 +2,38 @@ const express = require('express');
 
 const routes = express.Router();
 const index = require('../controller/tracks.handler');
-const playlist = require('../controller/playlist.handler');
-const token_procedure = require('../controller/token.spotify');
+const {
+  generateRandomPlaylist,
+  addTrack,
+  storePlaylist,
+} = require('../controller/playlist.handler');
+
+const {
+  updateEmail,
+  show,
+  updatePassword,
+  storeUser,
+  updateUsername,
+} = require('../controller/user.handler');
+
 const token_jwt = require('../controller/jwt.handler');
-const user = require('../controller/user.handler');
-const authorization = require('../middleware/Authentication');
+const { AuthBearer } = require('../middleware/Authentication');
 
-// ROUTE FOR CREATE/DELETE/UPTADE/READ USER
-routes.post('/user', user.store);
-routes.get('/user', user.show);
+routes.post('/user', storeUser);
+routes.get('/user', show);
 
-routes.put('/user/update/username', authorization.basics, user.updateUsername);
-routes.put('/user/update/email', authorization.basics, user.updateEmail);
-routes.put('/user/update/password', authorization.basics, user.updatePassword);
+routes.put('/user/update/username', AuthBearer, updateUsername);
+routes.put('/user/update/email', AuthBearer, updateEmail);
+routes.put('/user/update/password', AuthBearer, updatePassword);
 
-// ROUTE TO PROCESSING/REDIRECT/CREATE OF TOKEN SPOTIFY
-routes.get('/token', token_procedure.redirectToAuthorizedURI);
-routes.get('/callback', token_procedure.tokenStore);
+routes.get('/playlist/generate', AuthBearer, generateRandomPlaylist);
+routes.post('/playlist', AuthBearer, storePlaylist);
+routes.get('/playlist/add/track', AuthBearer, addTrack);
 
-// ROUTE RELATIONAL WITH PLAYLIST
-routes.get('/playlist/generate', authorization.basics, playlist.generateRandom);
-routes.get('/playlist/create', authorization.basics, playlist.store);
-routes.get('/playlist/add/track', authorization.basics, playlist.addTrack);
+routes.get('/track', index.findTrack);
+routes.put('/track/:track_id', AuthBearer, index.addSongsInTracksLiked);
+routes.delete('/track/:track_id', AuthBearer, index.removeTrack);
 
-// ROUTE ACTION USER AND TRACKS
-routes.get('/', index.findTrack);
-routes.post('/liked-track', authorization.basics, index.addSongsInTracksLiked);
-routes.delete('/liked-track', authorization.basics, index.removeTrack);
-
-// ROUTE FOR CREATE TOKEN JWT
 routes.post('/auth/token', token_jwt.store);
 routes.post('/auth/reflesh_token/:reflesh_token', token_jwt.reflesh);
 

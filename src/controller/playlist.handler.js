@@ -1,14 +1,12 @@
-const credentials = require('../../config/credentials');
+const { endpoint } = require('../../config/constants').spotifyURL;
 
-const { spotifyURL } = credentials;
-const { endpoint } = spotifyURL;
 const spotify = require('../../config/spotify/spotify-connetion');
-const ident_track = require('../../functions/ident-track');
-const Playlist = require('../model/Playlist');
+const ident_track = require('../../utils/ident-track');
+const Playlist = require('../service/playlist.service');
 const { InvalidArgumentError, InternalServerError } = require('../service/errors');
 
 module.exports = {
-  async generateRandom(req, res, next) {
+  async generateRandomPlaylist(req, res, next) {
     try {
       const { artist } = req.query;
 
@@ -30,7 +28,7 @@ module.exports = {
     }
   },
 
-  async store(req, res, next) {
+  async storePlaylist(req, res, next) {
     try {
       const { user } = req;
       const { name } = req.body;

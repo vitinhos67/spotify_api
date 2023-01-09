@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node app.js",
-    "dev": "sudo docker compose up -d && nodemon server.js --ignore __tests__",
+    "start:dev": "nodemon server.js --ignore __tests__",
     "lint:prettier": "prettier --check .",
     "lint:fix": "eslint --fix && prettier --write .",
     "test": "jest"

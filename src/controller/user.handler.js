@@ -3,7 +3,7 @@ const modelUser = require('../service/user.service');
 const { InvalidArgumentError } = require('../service/errors');
 
 module.exports = {
-  async store(req, res, next) {
+  async storeUser(req, res, next) {
     try {
       const { username, email, password } = req.body;
 

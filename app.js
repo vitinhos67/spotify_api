@@ -1,14 +1,15 @@
 require('dotenv').config();
+
 const express = require('express');
 
 const app = express();
 const helmet = require('helmet');
-const session = require('express-session');
+
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { json } = require('express');
-
-const errors = require('./src/middleware/errors/error.handler');
+const { port } = require('./config/constants').configs;
+const errors = require('./src/middleware/errors/error.handler.middleware');
 const routes = require('./src/routes');
 
 (async () => {
@@ -22,14 +23,6 @@ const routes = require('./src/routes');
   app.use(helmet());
   app.use(json());
   app.use(cookieParser());
-  app.use(
-    session({
-      secret: process.env.sess,
-      saveUninitialized: true,
-      cookie: { maxAge: 60000 },
-      resave: false,
-    }),
-  );
 
   app.use(routes);
   app.use(errors);
@@ -37,10 +30,8 @@ const routes = require('./src/routes');
   if (process.env.NODE_ENV === 'test') {
     module.exports = app;
   } else {
-    const { PORT } = process.env;
-
-    app.listen(PORT, () => {
-      console.log(`Server listening ${PORT}`);
+    app.listen(port, () => {
+      console.log(`Server listening ${port}`);
     });
   }
 })();

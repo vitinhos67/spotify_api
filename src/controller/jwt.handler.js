@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 
 const User = require('../service/user.service');
-const { sign_access_token, sign_reflesh_token, decode } = require('../../functions/jwt');
+const { sign_access_token, sign_reflesh_token, decode } = require('../../utils/jwt');
 const { InvalidArgumentError } = require('../service/errors');
 
 module.exports = {

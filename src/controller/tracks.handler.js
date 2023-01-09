@@ -1,8 +1,5 @@
-const credentials = require('../../config/credentials');
-
-const { spotifyURL } = credentials;
-const { endpoint } = spotifyURL;
-const ident_track = require('../../functions/ident-track');
+const { endpoint } = require('../../config/constants').spotifyURL;
+const ident_track = require('../../utils/ident-track');
 const spotify = require('../../config/spotify/spotify-connetion');
 const TracksQuery = require('../database/query/TracksQuery');
 const Tracks = require('../service/tracks.service');
@@ -12,14 +9,12 @@ const { InvalidArgumentError, ValueAlreadyExists } = require('../service/errors'
 module.exports = {
   async findTrack(req, res, next) {
     try {
-      const { searchTrack } = req.body;
       const { q } = req.query;
 
-      if (!searchTrack && searchTrack == null) {
-        if (!q) {
-          throw new InvalidArgumentError('no_query');
-        }
+      if (!q) {
+        throw new InvalidArgumentError('no_query');
       }
+
       const response = await spotify.request(`${endpoint}/v1/search?q=${q}&type=track&limit=10`);
 
       const ident = ident_track(response.tracks.items);
@@ -32,7 +27,7 @@ module.exports = {
     try {
       const { user } = req;
 
-      const { track_id } = req.query;
+      const { track_id } = req.params;
 
       const verify = await Tracks.verify(user.id, track_id);
 
@@ -58,7 +53,7 @@ module.exports = {
   async removeTrack(req, res, next) {
     try {
       const { user } = req;
-      const { track_id } = req.query;
+      const { track_id } = req.params;
 
       const find_track = await spotify.request(`${endpoint}/v1/tracks/${track_id}`);
 

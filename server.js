@@ -1,8 +1,9 @@
 require('dotenv').config();
+
 const app = require('./app');
 
-const { PORT_DEV } = process.env;
+const { port } = require('./config/constants').configs;
 
-app.listen(PORT_DEV, async () => {
-  console.log(`Listening port ${PORT_DEV} in mode development`);
+app.listen(port, async () => {
+  console.log(`Listening port ${port} in mode development`);
 });

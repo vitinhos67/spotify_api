@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const playlistQuery = require('../database/query/PlaylistQuery');
 const { InvalidArgumentError } = require('./errors');
 
@@ -5,6 +6,7 @@ class Playlist {
   constructor({
     name, author, author_id, tracks,
   }) {
+    this._id = crypto.randomUUID();
     this._name = name;
     this._author = author;
     this._author_id = author_id;
@@ -14,6 +16,7 @@ class Playlist {
   async create() {
     try {
       const playlist = await playlistQuery.create({
+        _id: this._id,
         name: this._name,
         author: this._author,
         author_id: this._author_id,

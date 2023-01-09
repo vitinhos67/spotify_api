@@ -2,14 +2,13 @@ const { TokenExpiredError } = require('jsonwebtoken');
 const { InvalidArgumentError } = require('../service/errors');
 const UserQuery = require('../database/query/UserQuery');
 
-const { verify } = require('../../functions/jwt');
-const generate_reflesh_token = require('../../functions/generate.reflesh.token');
+const { verify } = require('../../utils/jwt');
+const generate_reflesh_token = require('../../utils/generate.reflesh.token');
 
 module.exports = {
-  async basics(req, res, next) {
+  async AuthBearer(req, res, next) {
     try {
-      const { authorization } = req.headers;
-      const { reflesh_token } = req.body;
+      const { authorization, reflesh_token } = req.headers;
 
       if (!authorization || !reflesh_token) {
         return res.status(401).json({
@@ -32,7 +31,6 @@ module.exports = {
         }
 
         req.user = user;
-
         return next();
       }
 
@@ -42,6 +40,7 @@ module.exports = {
         throw new InvalidArgumentError('User not find.');
       }
 
+      console.log('era para eu estart aqui');
       req.user = user;
       next();
     } catch (e) {
