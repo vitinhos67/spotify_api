@@ -55,4 +55,13 @@ module.exports = {
       }
     }
   },
+
+  async clearPlaylistsAfterTest() {
+    try {
+      const clear = await Playlist.remove({});
+      return clear;
+    } catch (error) {
+      return error;
+    }
+  },
 };

@@ -1,5 +1,6 @@
 const validator = require('validator');
 const bcryptjs = require('bcryptjs');
+
 const userQuery = require('../database/query/UserQuery');
 const { InvalidArgumentError, ValueAlreadyExists } = require('./errors');
 const jwt = require('../../utils/jwt');
@@ -140,6 +141,33 @@ class User {
     }
 
     return userQuery.updateFieldUsername(id, username);
+  }
+
+  static async loginUser({ email, password }) {
+    try {
+      const findUser = await userQuery.findUserByEmail(email);
+
+      if (!findUser) {
+        throw new Error(`User with email: ${email} not found`);
+      }
+
+      const comparePassword = await bcryptjs.compare(password, findUser.password);
+
+      if (!comparePassword) {
+        throw new InvalidArgumentError('Password invalid');
+      }
+
+      const auth = {
+        access_token: jwt.sign_access_token({ id: findUser.id }),
+        reflesh_token: jwt.sign_reflesh_token({ id: findUser.id }),
+      };
+
+      delete findUser.password;
+
+      return { auth, user: findUser };
+    } catch (error) {
+      return error;
+    }
   }
 }
 

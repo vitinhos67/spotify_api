@@ -21,8 +21,6 @@ const func = (tracks) => {
     preview_url: value.preview_url,
   }));
 
-  console.log(indented_songs);
-
   return indented_songs;
 };
 

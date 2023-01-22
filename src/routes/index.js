@@ -14,6 +14,7 @@ const {
   updatePassword,
   storeUser,
   updateUsername,
+  login,
 } = require('../controller/user.handler');
 
 const token_jwt = require('../controller/jwt.handler');
@@ -25,6 +26,8 @@ routes.get('/user', show);
 routes.put('/user/update/username', AuthBearer, updateUsername);
 routes.put('/user/update/email', AuthBearer, updateEmail);
 routes.put('/user/update/password', AuthBearer, updatePassword);
+
+routes.post('/login', login);
 
 routes.get('/playlist/generate', AuthBearer, generateRandomPlaylist);
 routes.post('/playlist', AuthBearer, storePlaylist);

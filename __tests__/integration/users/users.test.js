@@ -1,7 +1,7 @@
 const request = require('supertest');
-const app = require('../../app');
-const { deleteUsersAfterTest } = require('../../src/database/query/UserQuery');
-const User = require('../../src/service/user.service');
+const app = require('../../../app');
+const { deleteUsersAfterTest } = require('../../../src/database/query/UserQuery');
+const User = require('../../../src/service/user.service');
 
 describe('Check Routes relational with  the users', () => {
   afterAll(async () => {
@@ -37,7 +37,8 @@ describe('Check Routes relational with  the users', () => {
     const result = await request(app)
       .put('/user/update/email')
       .set('Authorization', `Bearer ${user.access_token}`)
-      .send({ email, reflesh_token: user.reflesh_token });
+      .set('reflesh_token', user.reflesh_token)
+      .send({ email });
     expect(result.statusCode).toBe(202);
   });
 
@@ -52,8 +53,9 @@ describe('Check Routes relational with  the users', () => {
     const result = await request(app)
       .put('/user/update/password')
       .set('Authorization', `Bearer ${user.access_token}`)
+      .set('reflesh_token', user.reflesh_token)
       .send({
-        password, new_password, confirm_password, reflesh_token: user.reflesh_token,
+        password, new_password, confirm_password,
       });
     expect(result.statusCode).toBe(202);
   });
@@ -65,7 +67,8 @@ describe('Check Routes relational with  the users', () => {
     const result = await request(app)
       .put('/user/update/username')
       .set('Authorization', `Bearer ${user.access_token}`)
-      .send({ username: 'fatinha', reflesh_token: user.reflesh_token });
+      .set('reflesh_token', user.reflesh_token)
+      .send({ username: 'fatinha' });
     expect(result.statusCode).toBe(202);
   });
 });

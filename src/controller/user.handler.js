@@ -1,5 +1,5 @@
 const User = require('../model/User');
-const modelUser = require('../service/user.service');
+const userService = require('../service/user.service');
 const { InvalidArgumentError } = require('../service/errors');
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
     try {
       const { username, email, password } = req.body;
 
-      const user = new modelUser(username, email, password);
+      const user = new userService(username, email, password);
       const userCreate = await user.create();
 
       if (userCreate instanceof Error) {
@@ -17,6 +17,27 @@ module.exports = {
       return res.status(201).json(userCreate);
     } catch (e) {
       next(e);
+    }
+  },
+
+  async login(req, res, next) {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        throw new InvalidArgumentError('Invalid Arguments');
+      }
+
+      const user = await userService.loginUser({
+        email,
+        password,
+      });
+
+      console.log(user);
+
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
     }
   },
 
@@ -38,7 +59,7 @@ module.exports = {
         throw new InvalidArgumentError('user_invalid');
       }
 
-      const user_model = new modelUser(user.username, user.email);
+      const user_model = new userService(user.username, user.email);
 
       await user_model.updateUsername(user, username);
       return res.status(202).json({
@@ -59,7 +80,7 @@ module.exports = {
       const { user } = req;
       const { email } = req.body;
 
-      const _user = new modelUser(user.username, user.email, user.password);
+      const _user = new userService(user.username, user.email, user.password);
 
       await _user.updateEmail(email);
 
@@ -81,7 +102,7 @@ module.exports = {
       const { user } = req;
       const { password, new_password, confirm_password } = req.body;
 
-      const userModel = new modelUser(user.username, user.email, user.password);
+      const userModel = new userService(user.username, user.email, user.password);
 
       const update = await userModel.updatePassword(user.id, {
         password,
