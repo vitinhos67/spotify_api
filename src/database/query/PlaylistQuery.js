@@ -64,4 +64,13 @@ module.exports = {
       return error;
     }
   },
+
+  async allPlaylist() {
+    try {
+      const clear = await Playlist.find();
+      return clear;
+    } catch (error) {
+      return error;
+    }
+  },
 };

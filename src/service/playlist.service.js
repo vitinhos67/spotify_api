@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+
+const PlaylistQuery = require('../database/query/PlaylistQuery');
 const playlistQuery = require('../database/query/PlaylistQuery');
 const { InvalidArgumentError } = require('./errors');
 
@@ -29,7 +31,16 @@ class Playlist {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  static async getAllPlaylists() {
+    try {
+      const playlists = await PlaylistQuery.allPlaylist();
+
+      return playlists;
+    } catch (error) {
+      return error;
+    }
+  }
+
   static async addSong(name, author_id, tracks) {
     try {
       const playlist = await playlistQuery.findPlaylist({

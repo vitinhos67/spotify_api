@@ -2,7 +2,7 @@ const { endpoint } = require('../../config/constants').spotifyURL;
 
 const spotify = require('../../config/spotify/spotify-connetion');
 const ident_track = require('../../utils/ident-track');
-const Playlist = require('../service/playlist.service');
+const playlistService = require('../service/playlist.service');
 const { InvalidArgumentError, InternalServerError } = require('../service/errors');
 
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
     }
   },
 
-  async storePlaylist(req, res, next) {
+  async storePlaylists(req, res, next) {
     try {
       const { user } = req;
       const { name } = req.body;
@@ -43,7 +43,7 @@ module.exports = {
         author_id: user.id,
       };
 
-      const playlist = new Playlist(obj);
+      const playlist = new playlistService(obj);
       const create_playlist = await playlist.create();
 
       res.status(200).json(create_playlist);
@@ -70,16 +70,16 @@ module.exports = {
         preview_url: ident[0].preview_url,
       };
 
-      const add = await Playlist.addSong(name, author_id, tracks);
+      const add = await playlistService.addSong(name, author_id, tracks);
 
       if (add instanceof InvalidArgumentError) {
-        throw new InvalidArgumentError('That playlist not exists');
+        throw new InvalidArgumentError('That playlistService not exists');
       }
 
       res.status(200).json(add);
     } catch (err) {
       if (err instanceof InvalidArgumentError) {
-        if (err.message === 'That playlist not exists') {
+        if (err.message === 'That playlistService not exists') {
           return res.status(404).json({
             error: err.message,
           });
@@ -87,6 +87,16 @@ module.exports = {
 
         next(err);
       }
+    }
+  },
+
+  async getAllPlaylists(req, res, next) {
+    try {
+      const response = await playlistService.getAllPlaylists();
+
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
     }
   },
 };

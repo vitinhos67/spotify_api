@@ -5,7 +5,8 @@ const index = require('../controller/tracks.handler');
 const {
   generateRandomPlaylist,
   addTrack,
-  storePlaylist,
+  storePlaylists,
+  getAllPlaylists,
 } = require('../controller/playlist.handler');
 
 const {
@@ -30,7 +31,8 @@ routes.put('/user/update/password', AuthBearer, updatePassword);
 routes.post('/login', login);
 
 routes.get('/playlist/generate', AuthBearer, generateRandomPlaylist);
-routes.post('/playlist', AuthBearer, storePlaylist);
+routes.post('/playlist', AuthBearer, storePlaylists);
+routes.get('/playlist', getAllPlaylists);
 routes.put('/playlist/add/track', AuthBearer, addTrack);
 
 routes.get('/track', index.findTrack);

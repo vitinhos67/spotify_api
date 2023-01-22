@@ -16,8 +16,6 @@ describe('Check routes relational with playlist', () => {
         username: 'admin',
       });
 
-    console.log(user.body);
-
     const result = await request(app)
       .post('/playlist')
       .set('Authorization', `Bearer ${user.body.access_token}`)
@@ -26,5 +24,12 @@ describe('Check routes relational with playlist', () => {
         name: 'Lady gaga so as melhores 2000',
       });
     expect(result.statusCode).toBe(200);
+  });
+
+  it('Should return all playlist with status 200', async () => {
+    const response = await request(app)
+      .get('/playlist');
+
+    expect(response.statusCode).toBe(200);
   });
 });
