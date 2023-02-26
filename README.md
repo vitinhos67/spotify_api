@@ -1,6 +1,6 @@
 # Basico para se utilizar a API
 
-A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e necessario ter uma conta e criar um DB no site.
+A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e necessario ter uma conta e criar um Databse mongoDB.
 
 <br>
 
