@@ -1,6 +1,6 @@
 # Basico para se utilizar a API
 
-A API utiliza o banco de dados não relacionais mongodb, para utilizar a API e necessario ter uma conta e criar um Databse mongoDB.
+A API utiliza o banco de dados não relacionais mongoDB, para utilizar a API e necessario ter o banco de dados rodando em sua maquina, e também ter a autenticação com a API do spotify.
 
 <br>
 
